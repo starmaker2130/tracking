@@ -33,13 +33,13 @@ To get a copy of this application for development purposes, clone this repositor
 
 
 ### Deployment
-Production:
+#### Production:
 
 Open application after installing it.
 
-Dev:
+#### Dev:
 1. Move into directory where 'index.js' is located
-2. run `'node index.js'`
+2. run `node index.js`
 
 Add additional notes about how to deploy this on a live system
 
@@ -51,10 +51,8 @@ Generating AR Experiences
 TODO: example content coming soon
 
 ### Built With
-
-AFrame
-
-AR.js
+* AFrame
+* AR.js
 
 ### Contributing
 Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
@@ -69,5 +67,5 @@ Patrice-Morgan Ongoly
 This project is licensed under the MIT License
 
 ### Acknowledgments
-House of Venus, Benefit Corporation
-University of Maryland Alumni Association
+* House of Venus, Benefit Corporation
+* University of Maryland Alumni Association
