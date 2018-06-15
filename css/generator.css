@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: arial;
+    background-color: #eee;
+}
+
+#upload-container, .download-marker-button{
+    border-radius: 10px;
+    background-color: black;
+    height: 50px;
+    text-align: center;
+    color: white;
+    font-family: monospace;
+}
+
+#upload-container{
+    width: 150px;
+    line-height: 50px;
+    margin: 5% auto;
+}
+
+.mdl-tooltip{
+    display: none;
+    opacity: 0;
+}
+
+.download-marker-button{
+    width: 75px;
+}
+
+#download-container{
+    width: 155px;
+    margin: 0 auto;
+}
+
+#imageContainer{
+    margin: 0 auto;
+}

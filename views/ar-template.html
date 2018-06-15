@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+    <title>AR Template | v 0.4.0</title>
+    <link rel='stylesheet' type='text/css' href='../css/profile.css' />
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <!----><script src='../js/aframe.min.js'></script>
+    <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
+    <script src='../js/ar.min.js'></script> <!-- FOR PRODUCTION PURPOSES ONLY 
+    <script src='../js/cARd.js'></script>-->
+    <script>
+        var sessionManager;
+        
+        function requestFullScreen(element) { //    makes the application fullscreen on fullscreen equipped browsers
+            var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen; // Supports most browsers and their versions.
+
+            if (requestMethod) { // Native full screen.
+                requestMethod.call(element);
+            } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+            }
+        }
+        
+        function initializeSession(data){
+            sessionManager = {
+                audio: {
+                    player: null,
+                    isPlaying: false,
+                    focus: null,
+                    state: 0 // 0 = inactive; 1 = playing; 2 = paused
+                },
+                application: {
+                    focus: 0, // 0 = home; 1 = audio; 2 = visual; 3 = search
+                    players: {
+                        available: [
+                            'audioAR',
+                            'visualAR'
+                        ],
+                        loaded: null
+                    }
+                },
+                visual: {
+                    player: null,
+                    isPlaying: false,
+                    focus: null,
+                    state: 0 // 0 = inactive; 1 = playing; 2 = paused
+                },
+            };
+
+           // loadAREnvironment(0);
+            /**/
+
+            sessionManager.audio.focus = 0;
+        }
+        
+        $(document).ready(function(){
+            initializeSession();
+
+            // FIRST STAGE
+            $('#launch-application-page').click(function(){
+
+                console.log('application launch...');
+
+                var elem = document.body;
+                requestFullScreen(elem);
+
+                $(this).animate({
+                    height: 0
+                }, 2500, function(){
+                    $(this).hide();
+                });
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div id='launch-application-page' class='entry-layer overlay'>
+        <div id='instructions'>
+            tap anywhere
+            <div id='logo'></div>
+            to launch app
+        </div>
+    </div>
+    <div class='control-layer overlay'>
+    </div>
+    <!-- FOR PRODUCTION PURPOSES ONLY-->
+    <a-scene embedded arjs id='main-app-container' class='viewer-layer'>
+        <a-assets>
+            <img id='floor-texture' src='../media/texture/grid_pattern.png' preload='true' />
+		</a-assets>
+        
+        <!--<a-marker preset='hiro'>-->
+        <a-marker preset='custom' type='pattern' url='../media/pattern/nine.patt'>
+            <a-entity id='floor'
+                      geometry='primitive: plane; width: 1; height: 1;'
+                      material='src: #floor-texture; repeat: 1 1;'
+                      text='value: origin; width: 4; color: white; align: center;'
+                      position='0 0 0'
+                      rotation='-90 0 0'>
+            </a-entity>
+        </a-marker>
+        
+        <a-camera-static />
+    </a-scene><!---->
+</body>
+</html>
