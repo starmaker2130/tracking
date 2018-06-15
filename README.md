@@ -9,22 +9,19 @@ These instructions will get you a copy of the project up and running on your loc
 You will need a webcam to run this software locally. A publicly accessible release is running live at http://hov.fun (v. 0.9.0).
 
 You will need Node.JS installed on your machine (v. 7.0.0 and up; 7.10.0 recommended) as well as the following dependencies:
-body-parser | 1.14.2
 
-ejs: 2.4.1
-
-express: 4.14.0
-
-formidable: v. 1.1.1
-
-socket.io: v. 1.5.0
+* body-parser  (v. 1.14.2)
+* ejs (v. 2.4.1)
+* express (v. 4.14.0)
+* formidable: (v. 1.1.1)
+* socket.io: (v. 1.5.0)
 
 All the above packages can be installed via npm. Follow the instructions for downloading npm here:
 
 Install the dependencies using commands with the following format in the command line:
-
-npm install <package-name>
-
+```
+npm install < package-name >
+```
 
 ### Installing
 No installation necessary for the production version. Simply go to hov.fun to access the current release. This version can be installed locally on your desktop machine using the following procedure:
@@ -42,7 +39,8 @@ Open application after installing it.
 
 Dev:
 1. Move into directory where 'index.js' is located
-2. run 'node index.js'
+2. run `'node index.js'`
+
 Add additional notes about how to deploy this on a live system
 
 ### Usage
