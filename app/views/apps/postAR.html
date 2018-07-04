@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>post.AR | see with your phone, build with your hands | v. 0.7.0</title>
+    <link rel='stylesheet' href='../css/main.css' type="text/css" />
+    <script src='../js/socket.io.js'></script>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body, html{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            var socket = io.connect(location.host);
+        });
+    </script>
+</head>
+<body>
+    <div id='main-app-container'>
+        <div id='app-header-title'>post.AR</div>
+        <div id='explanation-options-container'>
+            <input id='what-button' value='what is this?' type='button' />
+            <input id='why-button' value='why did you make this?' type='button' />
+            <input id='how-button' value='how to use' type='button' />
+        </div>
+    </div>
+</body>
+</html>

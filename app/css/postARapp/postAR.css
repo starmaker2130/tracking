@@ -1,0 +1,679 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+#camera-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+#experience-container{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index: -100;
+    display: none;
+    opacity: 0;
+}
+
+#video{
+    position: absolute;
+    display: block;
+    width: 900px;
+    height: 675px;
+    top: 50%;
+    left: 50%;
+    margin: -338px auto 0 -450px;
+}
+
+#canvas{
+    display: block;
+}
+
+#canvas-container{
+    position: absolute;
+    display: block;
+    width: 640px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    margin: -200px auto 0 -320px;
+}
+
+.overlay-container{
+    width: 100%;
+    height: 20%;
+    max-height: 100px;
+    z-index: 25;
+}
+
+#header-overlay-container{
+    position: absolute;
+    top: 0;
+}
+
+#share-build-button{
+    display: block;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin: 2px auto;
+    color: white;
+    background-color: rgba(255, 255, 255, 0);
+    font-family: monospace;
+    font-weight: 900;
+    text-align: center;
+    border: 3px white solid;
+}
+
+#share-build-button{
+    z-index: -50;
+}
+
+#share-build-button:focus{
+    outline: none;
+}
+
+#share-build-button:hover{
+    color: black;
+    background-color: white;
+    cursor: pointer;
+}
+
+#upload-marker-img-button{
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -38px;
+}
+
+#gesture-watch-button{
+    position: absolute;
+    bottom: 12%;
+    left: 50%;
+    display: none;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin-left: -37px;
+    color: white;
+    background-color: rgba(255, 255, 255, 0);
+    font-family: monospace;
+    font-weight: 900;
+    text-align: center;
+    border: 3px white solid;
+    opacity: 0;
+    z-index: 101;
+    transition: hover 0.5s;
+}
+
+#gesture-watch-button:hover{
+    background-color: rgba(255, 255, 255, 1.0);
+    cursor: pointer;
+}
+
+#gesture-watch-button:focus{
+    outline: none;
+}
+
+.generation-step-button{
+    display: none;
+}
+
+.marker-decision-button{
+    float: left;
+    opacity: 0;
+    width: 50%;
+    height: 100%;
+    color: white;
+    font-size: 2em;
+    font-weight: 900;
+    text-align: center;
+    border: 3px white solid;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.marker-decision-button:hover{
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+
+.marker-decision-button:focus{
+    outline: none;
+}
+
+#return-to-camera-button{
+    border-radius: 0 0 0 15px;
+}
+
+#save-marker-button{
+    border-radius: 0 0 15px 0;
+}
+
+#main-build-options-menu{
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    margin-left: -150px;
+    width: 300px;
+    height: 80px;
+    z-index: 75;
+}
+
+.build-scene-button{
+    width: 65px;
+    height: 65px;
+    margin: 15px;
+    display: none;
+    opacity: 0;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0);
+    border: 3px white solid;
+    color: white;
+    font-family: monospace;
+    text-align: center;
+    font-weight: 900;
+    font-size: 2em;
+}
+
+.build-scene-button:hover{
+    cursor: pointer;
+    color: white;
+}
+
+.build-scene-button:focus{
+    outline: none;
+}
+
+#final-overlay{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: black;
+    color: white;
+    z-index: 106;
+}
+
+#mavnet-option-button{
+    
+}
+
+#www-option-button{
+    
+}
+
+.internet-sharing-option{
+    color: white;
+    border: 2px white dashed;
+    width: 75px;
+    height: 75px;
+    margin: 5px 10px;
+    text-align: center;
+    font-family: monospace;
+    font-size: 1.5em;
+    line-height: 75px;
+    border-radius: 50%;
+    background-color: black;
+}
+
+.internet-sharing-option:hover{
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+
+.internet-sharing-option:focus{
+    outline: none;
+}
+
+#internet-sharing-options-container{
+    height: 100px;
+    width: 200px;
+    display: block;
+    margin: 10% auto 2% auto;
+}
+
+#rooms-title{
+    position: absolute;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    top: 1%;
+    left: 50%;
+    margin-left: -100px;
+    color: white;
+    font-family: monospace;
+    font-style: italic;
+    font-weight: 900;
+    z-index: 99;
+}
+
+#ar-item-menu:hover{
+    background-color: red;
+}
+
+#setting-menu:hover{
+    background-color: greenyellow;
+}
+
+#code-menu:hover{
+    background-color: blue;
+}
+
+#experience-url-form-container{
+    border: 2px white solid;
+    border-radius: 10px;
+    color: white;
+    background-color: black;
+    width: 250px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+#user-entry-intro{
+    font-family: monospace;
+    display: block;
+    width: 100%;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+}
+
+#user-entry-label{
+    font-family: monospace;
+    font-size: 1.2em;
+    font-style: italic;
+    font-weight: 900;
+}
+
+#user-url-entry{
+    width: 100px;
+    height: 30px;
+    border-radius: 10px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+#user-url-entry:focus{
+    outline: none;
+    box-shadow: 3px 3px 3px white;
+}
+
+#experience-url-form{
+    width: 200px;
+    margin: 10px auto;
+}
+
+#submit-user-url{
+    display: block;
+    margin: 2px auto;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    background-color: black;
+    color: white;
+    font-weight: 900;
+    text-transform: lowercase;
+}
+
+#submit-user-url:focus{
+    outline: none;
+}
+
+#submit-user-url:hover{
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#settings-overlay{
+    display: none;
+    width: 100%;
+    height: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: red;
+    z-index: 75;
+    color: white;
+}
+
+
+.child-object{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 105;
+    width: 75px;
+    height: 75px;
+    border: 2px black solid;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-weight: 500;
+    font-family: monospace;
+    text-align: center;
+    cursor: grab;
+}
+
+#hov-home-button{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px white solid;
+    z-index: 99;
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    background-image: url('../../media/img/home-icon.png');
+    background-repeat: no-repeat;
+    background-size: 130% 100%;
+    background-position: center center;
+}
+
+#hov-home-button:hover{
+    cursor: pointer;
+    border-width: 6px;
+}
+
+#hov-home-button:focus{
+    outline: none;
+}
+
+#final-experience-preview-container{
+    /*overflow: hidden;*/
+    position: absolute;
+    height: 540px;
+    width: 720px;
+    top: 50%;
+    left: 50%;
+    margin: -290px 0 0 -360px;
+    display: none;
+    opacity: 0;
+    /*background-color: rgba(255, 255, 255, 0.1);
+    transparent none;*/
+}
+
+#generate-experience-button, #register-experience-button{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    z-index: 99;
+    position: absolute;
+    bottom: 2%;
+    left: 50%;
+    margin-left: -25px;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: white;
+    text-transform: uppercase;
+}
+
+#register-experience-button{
+    display: none;
+}
+
+#generate-experience-button:focus, #register-experience-button:focus{
+    outline: none;
+}
+
+#generate-experience-button:hover, #register-experience-button:hover{
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    font-weight: 900;
+}
+
+#videoSource{
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    border: 3px white solid;
+    z-index: 99;
+    position: absolute;
+    bottom: 2%;
+    left: 2%;
+    
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+#videoSource:focus{
+    outline: none;
+}
+
+#object-type-list-container{
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    border: 3px white solid;
+    z-index: 99;
+    position: absolute;
+    bottom: 2%;
+    left: 15%;
+    display: none;
+    opacity: 0;
+    
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+#object-type-list-container:focus{
+    outline: none;
+}
+
+.experience-type-button{
+    display: inline-block;
+    width: 65px;
+    height: 65px;
+    margin: 5px 25px;
+    
+    border-width: 0;
+    border-radius: 50%;
+    background-size: 100% 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    
+    font-family: monospace;
+    font-weight: 900;
+    text-align: center;
+    color: white;
+    
+    vertical-align: top;
+}
+
+.experience-type-button:hover{
+    background-color: white;
+    color: black;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.experience-type-button:focus{
+    outline: none;
+}
+
+#experience-type-dashboard-container{
+    position: absolute;
+    width: 360px;
+    height: 100px;
+    bottom: 8%;
+    left: 50%;
+    margin-left: -180px;
+    z-index: 99;
+}
+
+
+ .item-menu-option-large{
+    color: white;
+    font-weight: 900;
+    font-size: 1.0em;
+    font-family: sans-serif;
+    border: 2px white solid;
+    width: 125px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.item-menu-option{
+    color: white;
+    font-weight: 900;
+    font-size: 1.0em;
+    font-family: sans-serif;
+    border: 2px white solid;
+    width: 85px;
+    height: 50px;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.item-menu-option:hover, .item-menu-option-large:hover{
+    color: black;
+    background-color: rgba(255, 255, 255, 1.0);
+    cursor: pointer;
+}
+
+.item-menu-option:focus, .item-menu-option-large:focus{
+    outline: none;
+}
+
+.menu-container{
+    display: none;
+    width: 300px;
+    height: 350px;
+    border: 2px white solid;
+    border-radius: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -175px 0 0 -150px;
+}
+
+
+.input-data-field{
+    display: block;
+    margin: 5% auto;
+    width: 175px;
+    height: 30px;
+    border-radius: 5px;
+    font-family: sans-serif;
+}
+
+.input-data-field:focus{
+    outline: none;
+    box-shadow: 3px 3px 3px white;
+}
+
+.options-container{
+    width: 265px;
+    margin: 0 auto;
+}
+
+.menu-title{
+    text-align: center;
+    font-size: 1.5em;
+    font-family: sans-serif;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    color: white;
+    font-weight: 900;
+}
+
+.filler-text{
+    display: block;
+    border: 2px white dashed;
+    color: white;
+    border-radius: 10px;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    line-height: 65px;
+    margin: 5% auto;
+    font-family: sans-serif;
+    font-size: 1.0em;
+}
+
+#code-view-option{
+    display: block;
+    margin: 1% auto;
+    width: 100px;
+    background-color: white;
+    color: black;
+    height: 35px;
+}
+
+
+#object-modifier{
+    display: none;
+    font-family: monospace;
+    opacity: 0;
+    width: 250px;
+    height: 250px;
+    border-radius: 15px 0 0 15px;
+    background-color: red;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -150px 0 0 -150px;
+    z-index: 77;
+}
+
+#object-modifier-header{
+    text-align: center;
+    line-height: 25px;
+    height: 25px;
+    width: 100%;
+    z-index: 80;
+}
+
+.object-modifier-input-container{
+    width: 80%;
+    text-align: left;
+    margin: 2% 0 0 10%;
+    z-index: 80;
+}
+
+.object-modifier-input{
+    z-index: 80;
+    width: 150px; height: 30px; border-radius: 5px;
+}
+
+#save-button-container{
+    display: block;
+    margin: 2% auto;
+    width: 75px;
+    height: 35px;
+    border-radius: 15px;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 2px white solid;
+    z-index: 80;
+}
+
+#save-button-container:hover{
+    background-color: rgba(255, 255, 255, 1.0);
+    color: black;
+    cursor: pointer;
+    z-index: 80;
+}

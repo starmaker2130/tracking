@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>House of Venus | 0.6.24</title>
+    <link rel='stylesheet' href='../css/main.css' type="text/css" />
+    <script src='../js/socket.io.js'></script>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <script>
+        var sessionManager = {
+            application: {
+                focus: 0,
+                fullscreen: false,
+                menuVisible: false,
+                helpVisible: false,
+                channels: [
+                    'instruction-bottom-line',
+                    'main-title',
+                    'instruction-top-line',
+                    'main-app-container'
+                ],
+                page: 0, //=home, 1=team, 2=cARd, 3=shop
+                format: 0, //=flat, 1=vr, 2=ar
+                std: {
+                    handler: true,
+                    wallVisible: false,
+                },
+                siteLoaded: false,
+                roomPreviewVisible: false
+            },
+            socket: null
+        };
+        
+        function requestFullScreen(element) { //    makes the application fullscreen on fullscreen equipped browsers
+            var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen; // Supports most browsers and their versions.
+
+            if (requestMethod) { // Native full screen.
+                requestMethod.call(element);
+            } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+            }
+        }
+          
+        function startupSiteUI(){
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth();
+            var yyyy = today.getFullYear();
+            
+            var n = today.getDay();
+            
+            var dateDictionary = [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Oct',
+                'Nov',
+                'Dec'
+            ];
+            
+            var dayDictionary = ['Sun.', 'Mon.', 'Tues.', 'Wed.', 'Thurs.', 'Fri.', 'Sat.'];
+            
+/*            if(dd<10) {
+                dd = '0'+dd;
+            } 
+
+            if(mm<10) {
+                mm = '0'+mm;
+            } */
+
+            today = dayDictionary[n] + ' ' + dateDictionary[mm] + ' ' + dd;
+            
+            $('#menu-button, #help-button').delay(1000).animate({
+                opacity: 1.0
+            }, 2000, function(){
+                $('#date-label').empty().append(today);
+                $('#year-label').empty().append(yyyy);
+                $('.entry-instruction, #date-label, #year-label').animate({
+                    opacity: 1.0
+                }, 2000);
+            });
+        }
+        
+        function loadSite(){
+            var roomCapacity = 36;
+            
+            $('#main-title-wrapper').animate({
+                opacity: 0
+            }, 2000, function(){
+                $(this).hide();
+            });
+            
+            $('#main-app-container').removeClass('anticipating');
+            
+            $('#main-app-container').off('click');
+            
+            sessionManager.application.focus = 1;
+            
+            $('#overlay').show().animate({
+                opacity: 1.0,
+                height: '100%'
+            }, 1500);
+                        
+            $('#loading-bar').animate({
+                width: '100%'
+            }, 2500, function(){
+                $('#ready-label').animate({
+                    opacity: 1.0
+                }, 500, function(){
+                        $('.loaders').hide();
+                        $('#wall-header-container').show();
+                        $('#wall').show().animate({
+                            opacity: 1.0
+                        }, 1500, function(){
+                            
+                            sessionManager.application.siteLoaded = true;
+                        });
+                });
+            });
+        }
+        
+        var pageHandler = {
+            pages: [],
+            state: {
+                onPage: null
+            },
+            open: function(page){
+                var self = this;
+                var goto = self.sanitize(page);
+                goto += '-page';
+                console.log(`goto : ${goto}`);
+                
+                this.state.onPage = goto;
+                
+                $('#wall-content-container').animate({
+                    height: '640px'
+                }, 500, function(){
+                    
+                    $(this).css({
+                        marginTop: '-320px'
+                    });
+                });
+                
+                $(`#${goto}`).show().animate({
+                    height: '100%'
+                }, 1000, function(){
+                    
+                    $(`#${goto}-title`).show().animate({
+                        opacity: 1.0
+                    });
+                    
+                    $(`#${goto}-subtitle`).show().animate({
+                        opacity: 1.0
+                    });
+                    
+                    $(`#${goto}-facade`).show().animate({
+                        opacity: 1.0
+                    });
+                    
+                    switch(goto){
+                        case 'cARd-page':
+                            $('#play-section-vid').show().animate({
+                                opacity: 1.0
+                            }, 500);
+                            
+                            $('#procedure-container').show().animate({
+                                height: '300px'
+                            }, 750, function(){
+                                $('.step-container').show().animate({
+                                    opacity: 1.0
+                                }, 250);
+                                
+                                $('#wall-title').css({
+                                    color: 'black'
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/twitch.gif")'
+                                });
+                            });
+                            break;
+                        case 'team-page':
+                            $('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            }, 750, function(){
+                                $('#wall-title').css({
+                                    color: 'black'
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/fakenews.gif")'
+                                });
+                            });
+                            break;
+                        case 'store-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('#store-inventory-container').show().animate({
+                                height: '300px'
+                            }, 750, function(){
+                                $('#store-order-overlay').show().animate({
+                                    opacity: 1.0
+                                }, 750);
+                                
+                                $('.store-item').show().animate({
+                                    opacity: 1.0
+                                }, 750);
+                                
+                                $('#wall-title').css({
+                                    color: 'red',
+                                    fontWeight: 900
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/store.gif")'
+                                });
+                            });
+                            break;
+                        case 'contact-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('#contact-info-container').show().animate({
+                                height: '300px'
+                            }, 1000, function(){
+                                $('.contact-info-section').show().animate({
+                                    opacity: 1.0
+                                }, 750);
+                                
+                                $('#wall-title').css({
+                                    color: 'blue',
+                                    fontWeight: 900
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/rooms1.gif")'
+                                });
+                            });
+                            break;
+                        case 'ig-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('#ig-page-description').show().animate({
+                                height: '300px'
+                            }, 750, function(){
+                                $('#wall-title').css({
+                                    color: 'blueviolet',
+                                    fontWeight: 900
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/ig-page-bg1.gif")'
+                                });
+                            });            
+                            break;
+                        case 'medium-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('#medium-page-description').show().animate({
+                                height: '300px'
+                            }, 750, function(){
+                                $('#wall-title').css({
+                                    color: 'greenyellow',
+                                    fontWeight: 900
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/ig-page-bg2.gif")'
+                                });
+                            });
+                            break;
+                        default:
+                            console.log('nothing to go to')
+                            break;
+                    }
+                    
+                    /*($('#procedure-container').show().animate({
+                        height: '300px'
+                    });*/
+                    self.menu.show();                    
+                });
+                
+            },
+            sanitize: function(raw){
+                var link = raw;
+                link = link.substring(0, link.indexOf('-link'));
+                console.log(`link : ${link}`);
+                return link;
+            },
+            menu: {
+                show: function(){
+                    $('#menu-container').show().animate({
+                        opacity: 1.0
+                    }, 750);
+                },
+                hide: function(focus){
+                    var closeThis = focus;
+                    
+                    $('#wall-content-container').animate({
+                        height: '475px'
+                    }, 500, function(){
+                        $(this).css({
+                            marginTop: '-237px'
+                        });
+                    });
+                    
+                    $(`#${closeThis}`).animate({
+                        height: 0
+                    }, 750, function(){
+                        $(this).hide();
+                    });
+                    
+                    $(`#${closeThis}-facade`).animate({
+                        opacity: 0
+                    }, 750, function(){
+                        $(this).hide();
+                    });
+                    
+                    $('#menu-container').animate({
+                        opacity: 0
+                    }, 750, function(){
+                        $(this).hide();
+                    });
+                    
+                    switch(closeThis){
+                        case 'cARd-page':
+                            $('#play-section-vid').animate({
+                                opacity: 0
+                            }, 500, function(){
+                                $(this).hide();
+                            });
+
+                            $('#procedure-container').animate({
+                                height: 0
+                            }, 1000, function(){
+                                $(this).hide();
+                                $('.step-container').animate({
+                                    opacity: 0
+                                }, 750, function(){
+                                    $(this).hide();
+                                    $('#overlay').css({
+                                        backgroundImage: 'url("../media/img/bg/house2.gif")'
+                                    });
+                                });
+                                    
+                            });
+                            break;
+                        case 'team-page':
+                            $('#team-roster-container').animate({
+                                opacity: 0
+                            }, 1000, function(){
+                                $(this).hide();
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/house2.gif")'
+                                });
+                            });
+                            
+                            break;
+                        case 'store-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('.store-item').animate({
+                                opacity: 0
+                            }, 750, function(){
+                                $(this).hide();
+                            });
+                            
+                            $('#store-order-overlay').animate({
+                                opacity: 0
+                            }, 750, function(){
+                                $(this).hide();
+                            });
+                            
+                            $('#store-inventory-container').animate({
+                                height: 0
+                            }, 1000, function(){
+                                $(this).hide();
+                                $('.store-item').hide();
+                                
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/house2.gif")'
+                                });
+                            });
+                            break;
+                        case 'contact-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('#contact-info-container').animate({
+                                opacity: 0
+                            }, 1000, function(){
+                                $(this).hide();
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/house2.gif")'
+                                });
+                            });
+                            break;
+                        case 'ig-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('#ig-page-description').animate({
+                                height: 0
+                            }, 750, function(){
+                                $(this).hide();
+                                
+                                $('#wall-title').css({
+                                    color: 'black',
+                                    fontWeight: 400
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/house2.gif")'
+                                });
+                            });            
+                            break;
+                        case 'medium-page':
+                            /*$('#team-roster-container').show().animate({
+                                opacity: 1.0
+                            });*/
+                            $('#medium-page-description').animate({
+                                height: 0
+                            }, 750, function(){
+                                $(this).hide();
+                                
+                                $('#wall-title').css({
+                                    color: 'black',
+                                    fontWeight: 400
+                                });
+
+                                $('#overlay').css({
+                                    backgroundImage: 'url("../media/img/bg/house2.gif")'
+                                });
+                            });
+                            break;
+                        default:
+                            console.log('nothing to close');
+                            break;
+                    }
+                    
+                    $('#wall-title').css({
+                        color: 'black',
+                        fontWeight: 400
+                    });
+                    
+                    $('#overlay').css({
+                        backgroundColor: 'black'
+                    });
+                }
+            }
+        };
+        
+        var inventory = [
+                {
+                    index: 0,
+                    name: 'stARter kit',
+                    description: 'The web is everywhere. Now that you can see it, what will you discover? What will you make real?',
+                    stock: 9,
+                    img: '../media/img/card.gif'
+                },
+                {
+                    index: 1,
+                    name: 'pARty gift',
+                    description: 'Share the intimacy of a wonderful moment in a way that can be felt, not just seen.',
+                    stock: 3,
+                    img: '../media/img/gift-card.gif'
+                },
+                {
+                    index: 2,
+                    name: 'dream.AR',
+                    description: 'mix and master: reality at your service',
+                    stock: 9,
+                    img: '../media/img/dreamar.gif'
+                }
+            ];
+            
+        var roster = {
+            vb: {
+                name: 'vaibhav ponnuri',
+                titles: 'chief manufacturing officer, president',
+                summary: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">umd \'18 B.S. mathematics</p>'
+            },
+            pamo: {
+                name: 'patrice-morgan ongoly',
+                titles: 'chief executive officer, chairman',
+                summary: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">umd \'20 B.S. mathematics</p>'
+            },
+            mcg: {
+                name: 'andrew mcgillicudy',
+                titles: 'chief operating officer',
+                summary: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">umd \'18 B.S. computer science</p>'
+            },
+            noah: {
+                name: 'noah dagne',
+                titles: 'xr engineer, immersive design',
+                summary: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">umd \'19 B.S. computer science</p>'
+            },
+            naveen: {
+                name: 'naveen pattasseril',
+                titles: 'treasurer',
+                summary: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">umd \'20 B.A. business</p>'
+            },
+            jeff: {
+                name: 'jeffrey mercedes',
+                titles: 'xr engineer, ipresident',
+                summary: '<p>| Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">UMD \'19 B.S. Mathematics</p>'
+            },
+            cameron: {
+                name: 'cameron reed',
+                titles: 'xr engineer, immersive design',
+                summary: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">umd \'20 B.S. computer engineering</p>'
+            },
+            brian: {
+                name: 'brian nguyen',
+                titles: 'xr engineer, immersive architecture',
+                summary: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p class="umd-class-footer">UMD \'20 B.A. business</p>'
+            }
+        };
+            
+        document.addEventListener('DOMContentLoaded', function(){
+            sessionManager.socket = io.connect(location.host);
+            sessionManager.socket.emit('identify', {
+                page: 0
+            });
+            
+            startupSiteUI();
+                    
+            $('.menu-option').click(function(){
+                var dir = ['flat', 'vr', 'ar'];
+                var id = $(this).attr('id');
+                id = id.substring(0, id.indexOf('-'));
+                console.log(`selected ${id} format`);
+                var current = sessionManager.application.format;
+                
+                var opt = dir.indexOf(id);
+                
+                if(opt==current){
+                    console.log('already set');
+                }
+                else{                    
+                    $(`#${dir[current]}-option-button`).animate({
+                        opacity: 0
+                    }, 250, function(){
+                        $(this).removeClass('selected-option').animate({
+                            opacity: 1.0
+                        });
+                    });
+                    
+                    sessionManager.application.format = opt;
+                    
+                    $(`#${id}-option-button`).animate({
+                        opacity: 0
+                    }, 250, function(){
+                        $(this).addClass('selected-option').animate({
+                            opacity: 1.0
+                        }, 1000, function(){
+                            if(id=='vr'){
+                                console.log('transitioning to vr page');
+                                setTimeout(function(){
+                                    window.location.href = './vr';
+                                }, 1000);
+                            }
+                            else if(id=='ar'){
+                                console.log('transitioning to ar page');
+                                setTimeout(function(){
+                                    window.location.href = './ar';
+                                }, 1000);
+                            }
+                        });
+                    });
+                }
+            });
+            
+            $('#menu-button').click(function(){
+                var visible = sessionManager.application.menuVisible;
+                var menu = $('#menu-button');
+                if(visible){
+                    $('.menu-option').animate({
+                        opacity: 0
+                    }, 1000, function(){
+                        $(this).hide();
+                    });
+                    
+                    menu.removeClass('selected');
+                    menu.val('+');
+                }
+                else{
+                    $('.menu-option').show().animate({
+                        opacity: 0.8
+                    }, 1000);
+                    
+                    menu.addClass('selected');
+                    menu.val('-');
+                }
+                
+                sessionManager.application.menuVisible = !visible;
+            });
+            
+            $('#help-button').click(function(){
+                console.log('TODO: add help menu');
+            });
+            
+            $('#main-app-container').click(function(event){
+                var target = event.target.getAttribute('id')
+                var pos = sessionManager.application.channels.indexOf(target);
+                if(pos>-1){
+                    //console.log(`event initiated by ${target}`);
+                    
+                    if(sessionManager.application.focus==0){
+            
+                        $('body, html').css({
+                            backgroundColor: 'rgba(0, 0, 0, 1)', //#ffc8e1' | #ff0081 | #ff8888
+                        });
+                        
+                        if(!sessionManager.application.fullscreen){
+                            var elem = document.body;
+                            requestFullScreen(elem);
+                            sessionManager.application.fullscreen = true;
+                        }
+                        loadSite();
+                    }
+                }
+                else{
+                    console.log('not an acceptable channel');
+                }
+            });
+
+            var toggleOn = false;
+            
+            $('#menu-container').click(function(){
+                var focus = pageHandler.state.onPage;
+                pageHandler.menu.hide(focus);
+            });
+            
+            $('.link-button').click(function(){
+                var id = $(this).attr('id');
+                console.log(id);
+                
+                pageHandler.open(id);
+            });
+            
+            $('#step-one').click(function(){    // the software
+                //window.location.replace('./rooms');
+                $('#cARd-page-title').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).text('post.AR').animate({
+                        opacity: 1.0
+                    }, 500);
+                });
+                
+                $('#cARd-page-facade').css({
+                    backgroundImage: 'url("../media/img/bg/intimacy.gif")'
+                });
+            });
+            
+            $('#step-two').click(function(){    // the hardware
+                //window.location.replace('./rooms');
+                $('#cARd-page-title').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).text('cARd').animate({
+                        opacity: 1.0
+                    }, 500);
+                });
+                
+                $('#cARd-page-facade').css({
+                    backgroundImage: 'url("../media/img/bg/reach.gif")'
+                });
+            });
+            
+            $('#step-three').click(function(){  // the platform
+                //window.location.replace('./rooms');
+                $('#cARd-page-title').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).text('dream.AR').animate({
+                        opacity: 1.0
+                    }, 500);
+                });
+                
+                $('#cARd-page-facade').css({
+                    backgroundImage: 'url("../media/img/bg/step3.gif")'
+                });
+            });
+            
+            
+            $('.roster-item-container').click(function(){
+                var id = $(this).attr('id');
+                id = id.substring(0, id.indexOf('-'));
+                console.log(id);
+                
+                var current = roster[id];
+                
+                $('#close-profile-button, #team-page-overlay-container').css({
+                    display: 'block'
+                }).animate({
+                    opacity: 1.0
+                }, 500);
+                
+                $('#selected-profile-name').text(current.name);
+                $('#selected-profile-titles').text(current.titles);
+                $('#selected-profile-summary').empty().append(current.summary);
+                
+                $('#true-overlay').show().animate({
+                    height: '100%'
+                }, 500);
+            });
+            
+            $('#close-profile-button').click(function(){
+                $('#true-overlay').animate({
+                    height: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+                
+                $('#team-page-overlay-container').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+                
+                $(this).animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+            });
+            
+            $('#close-store-item-button').click(function(){
+                $('#true-overlay').animate({
+                    height: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+                
+                $('#store-page-overlay-container').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+                
+                $(this).animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+            });
+            
+            $('#close-contact-form-button').click(function(){
+                $('#true-overlay').animate({
+                    height: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+                
+                $('#contact-page-overlay-container').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+                
+                $(this).animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).hide();
+                });
+            });
+            
+            var currentStoreItem = null;
+            
+            $('#item-0').click(function(){
+                //window.location.replace('./rooms');
+                currentStoreItem = 0;
+                
+                $('#store-item-title').text(inventory[0].name);
+                $('#store-item-description').text(inventory[0].description);
+                
+                $('#store-page-facade').css({
+                    backgroundImage: `url('${inventory[currentStoreItem].img}')`,
+                });
+            });
+            
+            $('#item-1').click(function(){
+                //window.location.replace('./rooms');
+                currentStoreItem = 1;
+                
+                $('#store-item-title').text(inventory[1].name);
+                $('#store-item-description').text(inventory[1].description);
+                
+                $('#store-page-facade').css({
+                    backgroundImage: `url('${inventory[currentStoreItem].img}')`,
+                });
+            });
+            
+          /*  $('#item-2').click(function(){
+                //window.location.replace('./rooms');        
+                currentStoreItem = 2;
+                
+                $('#store-item-title').text(inventory[2].name);
+                $('#store-item-description').text(inventory[2].description);
+                
+                $('#store-page-facade').css({
+                    backgroundImage: `url('${inventory[currentStoreItem].img}')`,
+                });
+            });*/
+            
+            $('#open-order-form-button').click(function(){
+                $('#close-store-item-button, #store-page-overlay-container').css({
+                    display: 'block'
+                }).animate({
+                    opacity: 1.0
+                }, 500);
+                
+                $('#selected-store-item-img').css({
+                    backgroundImage: `url('${inventory[currentStoreItem].img}')`,
+                    backgroundSize: '100% 100%'
+                });
+                
+                $('#selected-store-item-title').text(inventory[currentStoreItem].name);
+                $('#selected-store-item-description').text(inventory[currentStoreItem].description);
+                $('#selected-store-item-stock-value').text(inventory[currentStoreItem].stock);
+                
+                $('#true-overlay').show().animate({
+                    height: '100%'
+                }, 500);
+            });
+            
+            var currentMoreSection = null;
+            
+            $('#mission-section').click(function(){
+                //window.location.replace('./rooms');
+                currentMoreSection = 0;
+                
+                $('#contact-page-facade').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).css({
+                        backgroundImage: 'none',
+                        backgroundColor: 'blue'
+                    }).empty().append(`We are merging the intelligence of the future with the intimacy of the past so that wherever you are, whatever you are making, you can reach out to others and <span style='font-style: italic; font-weight: 900;'>be real</span>.`).animate({
+                        opacity: 1.0
+                    }, 500);;
+                });
+            });
+            
+            $('#contact-form-section').click(function(){
+                //window.location.replace('./rooms');
+                currentMoreSection = 1;
+                
+                $('#contact-page-facade').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).empty().append(`Want to contact us? Click the button below to reach us. <input id='access-contact-form-button' class='more-access-button' value='connect' type='button' />`).animate({
+                        opacity: 1.0
+                    }, 500, function(){
+                        $('#access-contact-form-button').click(function(){
+                
+                            $('#close-contact-form-button, #contact-page-overlay-container').css({
+                                display: 'block'
+                            }).animate({
+                                opacity: 1.0
+                            }, 500);
+
+                            $('#true-overlay').show().animate({
+                                height: '100%'
+                            }, 500);
+                        });
+                    });
+                });
+                
+                
+            });
+            
+            $('#daw-section').click(function(){
+                //window.location.replace('./rooms');        
+                currentMoreSection = 2;
+                
+                $('#contact-page-facade').animate({
+                    opacity: 0
+                }, 500, function(){
+                    $(this).empty().append(`See our tech in action and play around with it yourself to make your own experiences! <input id='access-daw-button' class='more-access-button' value='explore' type='button' />`).animate({
+                        opacity: 1.0
+                    }, 500, function(){
+                        $('#access-daw-button').click(function(){
+                            window.location.href = 'https://houseofvenus.github.io/wiki'
+                        });
+                    });
+                });
+                
+                
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id='overlay'>
+        <div id='loading-title' class='loaders'>loading...</div>
+        <div id='loading-bar-container' class='loaders'>
+            <div id='loading-bar' class='loaders'></div>
+            <div id='ready-label' class='loaders'>done!</div>
+        </div>
+        <div id='wall'>
+            <div id='wall-header-container'>
+                <div id='wall-title'>House of Venus</div><div id='version-number'> v. 0.2.3</div>
+            </div>
+            <div id='wall-content-container'>
+                <div id='true-overlay'>
+                    <div id='team-page-overlay-container'>
+                        <div id='selected-profile-name' class='profile-data-field'>profile name</div>
+                        <div id='selected-profile-img' class='profile-data-field'></div>
+                        <div id='selected-profile-titles' class='profile-data-field'>profile titles</div>
+                        <div id='selected-profile-summary' class='profile-data-field'>profile summary</div>
+                        <div id='selected-profile-links' class='profile-data-field'>
+
+                        </div>
+                        <input id='close-profile-button' type='button' value='x' />
+                    </div>
+                    <div id='store-page-overlay-container'>
+                        <div id='selected-store-item-title' class='store-item-data-field'>store item name</div>
+                        <div id='selected-store-item-img' class='store-item-data-field'></div>
+                        <div id='selected-store-item-description' class='store-item-data-field'>store item description</div>
+                        <div id='selected-store-item-stock' class='store-item-data-field'><span id='selected-store-item-stock-value' class='store-item-data-field'>number</span> left in stock</div>
+                        <input id='add-store-item-to-cart-button' type='button' value='add to cart' />
+                        <input id='close-store-item-button' type='button' value='x' />
+                    </div>
+                    <div id='contact-page-overlay-container'>
+                        <div id='contact-page-overlay-header'>Message</div>
+                        <form id='contact-form-container'method="POST" action="https://formspree.io/YOUREMAILHERE">
+                            <input id='contact-form-email-input' type="email" name="email" placeholder="Your email">
+                            <textarea id='contact-form-message-input' name="message" placeholder="Your message"></textarea>
+                            <button id='contact-form-submit-button' type="submit">Send</button>
+                        </form>
+                        <input id='close-contact-form-button' type='button' value='x' />
+                    </div>
+                </div>
+                <input id='play-section-vid' type='button' value='&#x25b6;' />
+                <div id='store-order-overlay'>
+                    <div id='store-item-title'>store item title</div>
+                    <div id='store-item-description'>store item description</div>
+                    <input id='open-order-form-button' value='order'/>
+                </div>
+                <div id='menu-container'></div>
+                <div id='cARd-page' class='page-container'>
+                    <div id='cARd-page-title' class='page-title'>AR</div>
+                    <div id='cARd-page-facade' class='page-facade'>
+                    </div>
+                    <div id='cARd-page-subtitle' class='page-subtitle'>Be real.</div>
+                    <div id='procedure-container'>
+                        <div id='step-one' class='step-container page-section-container'>
+                            Intimacy oVeR distance
+                        </div>
+                        <div id='step-two' class='step-container page-section-container'>
+                            ReAch
+                        </div>
+                        <div id='step-three' class='step-container page-section-container'>
+                            Hype your Reality
+                        </div>
+                    </div>
+                </div>
+                <div id='team-page' class='page-container'>
+                    <div id='team-page-title' class='page-title'>roster</div>
+                    <div id='cARd-page-facade' class='page-facade'></div>
+                    <div id='team-roster-container'>
+                        <div id='roster-item-row-0' class='roster-item-row'>
+                            <div id='vb-roster-container' class='roster-item-container'>
+                                <div id='vb-profile-img' class='profile-img'></div>
+                                <div id='vb-profile-name' class='profile-name'>Vaibhav</div>
+                                <div id='vb-profile-position' class='profile-position'>CMO | President</div>
+                            </div>
+                            <div id='pamo-roster-container' class='roster-item-container'>
+                                <div id='pamo-profile-img' class='profile-img'></div>
+                                <div id='pamo-profile-name' class='profile-name'>Patrice-Morgan</div>
+                                <div id='pamo-profile-position' class='profile-position'>CEO | Chairman</div>
+                            </div>
+                        </div>
+                        <div id='roster-item-row-1' class='roster-item-row'>
+                            <div id='mcg-roster-container' class='roster-item-container'>
+                                <div id='mcg-profile-img' class='profile-img'></div>
+                                <div id='mcg-profile-name' class='profile-name'>Andrew</div>
+                                <div id='mcg-profile-position' class='profile-position'>COO</div>
+                            </div>
+                            <div id='naveen-roster-container' class='roster-item-container'>
+                                <div id='naveen-profile-img' class='profile-img'></div>
+                                <div id='naveen-profile-name' class='profile-name'>Naveen</div>
+                                <div id='naveen-profile-position' class='profile-position'>Treasurer</div>
+                            </div>
+                        </div>
+                        <div id='roster-item-row-2' class='roster-item-row'>
+                            <div id='cameron-roster-container' class='roster-item-container'>
+                                <div id='cameron-profile-img' class='profile-img'></div>
+                                <div id='cameron-profile-name' class='profile-name'>Cameron</div>
+                                <div id='cameron-profile-position' class='profile-position'>
+                                    XR Engineer
+                                </div>
+                            </div>
+                            <div id='brian-roster-container' class='roster-item-container'>
+                                <div id='brian-profile-img' class='profile-img'></div>
+                                <div id='brian-profile-name' class='profile-name'>Brian</div>
+                                <div id='brian-profile-position' class='profile-position'>
+                                    XR Engineer
+                                </div>
+                            </div>
+                        </div>
+                        <div id='roster-item-row-3' class='roster-item-row'>
+                            <div id='jeff-roster-container' class='roster-item-container'>
+                                <div id='jeff-profile-img' class='profile-img'></div>
+                                <div id='jeff-profile-name' class='profile-name'>Jeffrey</div>
+                                <div id='jeff-profile-position' class='profile-position'>
+                                    XR Engineer
+                                </div>
+                            </div>
+                            <div id='noah-roster-container' class='roster-item-container'>
+                                <div id='noah-profile-img' class='profile-img'></div>
+                                <div id='noah-profile-name' class='profile-name'>Noah</div>
+                                <div id='noah-profile-position' class='profile-position'>
+                                    XR Engineer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='store-page' class='page-container'>
+                    <div id='store-page-title' class='page-title'>store</div>
+                    <div id='store-page-facade' class='page-facade'></div>
+                    <div id='store-inventory-container'>
+                        <div id='item-0' class='store-item page-section-container'>
+                            stARter kit
+                        </div>
+                        <div id='item-1' class='store-item page-section-container'>
+                            pARty gift
+                        </div>
+                        <!--<div id='item-2' class='store-item page-section-container'>
+                            dreamAR
+                        </div>-->
+                    </div>
+                </div>
+                <div id='ig-page' class='page-container'>
+                    <div id='ig-page-title' class='page-title'>ig</div>
+                    <div id='ig-page-facade' class='page-facade'></div>
+                    <div id='ig-page-subtitle' class='page-subtitle'>Return to CP.</div>
+                    <div id='ig-page-description'>
+                        Click above to view post.
+                    </div>
+                </div>
+                <div id='contact-page' class='page-container'>
+                    <div id='contact-page-title' class='page-title'>...</div>
+                    <div id='contact-page-facade' class='page-facade'>
+                    We are merging the intelligence of the future with the intimacy of the past so that wherever you are, whatever you are making, you can reach out to others and <span style='font-style: italic; font-weight: 900;'>be real</span>.
+                    </div>
+                    <div id='contact-info-container'>
+                        <div id='mission-section' class='contact-info-section page-section-container'>
+                            mission
+                        </div>
+                        <div id='contact-form-section' class='contact-info-section page-section-container'>
+                            contact
+                        </div>
+                        <div id='daw-section' class='contact-info-section page-section-container'>
+                            demos &amp; wikis
+                        </div>
+                    </div>
+                </div>
+                <div id='medium-page' class='page-container'>
+                    <div id='medium-page-title' class='page-title'>medium</div>
+                    <div id='medium-page-facade' class='page-facade'></div>
+                    <div id='medium-page-subtitle' class='page-subtitle'>First nodes on the MAVnet</div>
+                    <div id='medium-page-description'>
+                        Click above to open the blog post.
+                    </div>
+                </div>
+                
+                <div id='navigation-container'>
+                    <input id='cARd-link' value='AR' type='button' class='link-button'/>
+                    <input id='team-link' value='team' type='button' class='link-button'/>
+                    <input id='store-link' value='products' type='button' class='link-button'/>
+                    <input id='ig-link' class='link-button' type='button' value='.' />
+                    <input id='contact-link' value='more' type='button' class='link-button'/>
+                    <input id='medium-link' class='link-button' type='button' value='.' />
+                    
+                    <!--<div id='social-media-link-container'>
+                        <input id='ig-button' class='wall-option' type='button' value='' />
+                        <input id='medium-button' class='wall-option' type='button' value='' />
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id='main-app-container' class='anticipating'>
+        
+        <div id='main-title-wrapper'>
+            <div id='instruction-top-line' class='entry-instruction'>tap anywhere</div>
+            <div id='main-title'>houseofven.us</div>
+            <div id='instruction-bottom-line' class='entry-instruction'>to enter site</div>
+        </div>
+        <div id='date-label'>Day. Month Date</div>
+        <div id='year-label'>Year</div>
+        <span id='site-title-header'>the House of Venus presents</span>
+        <div id='footer'>
+            <input type='button' id='menu-button' class='footer-button' value='+'/>
+            <input type='button' id='ar-option-button' class='footer-button menu-option' value='ar'/>
+            <input type='button' id='vr-option-button' class='footer-button menu-option' value='vr'/>
+            <input type='button' id='flat-option-button' class='footer-button menu-option selected-option' value='flat'/>
+            <input type='button' id='help-button' class='footer-button' value='?'/>
+        </div>
+    </div>
+</body>
+</html>

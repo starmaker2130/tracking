@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf=8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>venus graph v. 0.0.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body, html{
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
+        
+        #canvas{
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -250px 0 0 -150px;
+            border: 2px white solid;
+            border-radius: 5px;
+        }
+    </style>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            
+            var img = new Image();
+            
+            img.onload = function() {
+                //ctx.drawImage(img, 0, 0, 300, 500);
+                
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2.0;
+                ctx.beginPath();
+                ctx.moveTo(115, 60);
+                ctx.lineTo(90, 75);
+                ctx.lineTo(90, 100);
+                
+                ctx.lineTo(115, 120);
+                ctx.lineTo(120, 130);
+                
+                ctx.lineTo(100, 150);
+                ctx.lineTo(100, 190);
+                ctx.stroke();
+                
+                
+                ctx.moveTo(115, 60);
+                ctx.lineTo(145, 75);
+                ctx.lineTo(145, 100);
+                
+                ctx.lineTo(160, 120);
+                ctx.lineTo(180, 120);
+                ctx.stroke();
+            };
+            
+            img.src = '../media/img/venus-de-milo.png';
+        });
+    </script>
+</head>
+<body>
+    <canvas id='canvas' width='300' height='500'>
+        
+    </canvas>
+</body>
+</html>
