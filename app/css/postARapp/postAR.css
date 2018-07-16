@@ -489,7 +489,7 @@ body, html {
     
     border-width: 0;
     border-radius: 50%;
-    background-size: 100% 100%;
+    background-repeat: no-repeat;
     background-color: rgba(255, 255, 255, 0.7);
     
     font-family: monospace;
@@ -502,9 +502,8 @@ body, html {
 
 .experience-type-button:hover{
     background-color: white;
-    color: black;
-    font-size: 1.5em;
     cursor: pointer;
+    color: black;
 }
 
 .experience-type-button:focus{
@@ -676,4 +675,185 @@ body, html {
     color: black;
     cursor: pointer;
     z-index: 80;
+}
+
+#specify-model-source-container{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -150px 0 0 -150px;
+    width: 300px;
+    height: 300px;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+}
+
+#source-option-container{
+    width: 100%;
+    height: 100%;
+}
+
+.source-option{
+    font-weight: 900;
+    text-align: center;
+    line-height: 149px;
+    vertical-align: middle;
+    font-size: 1.2em;
+    color: white;
+    font-family: monospace;
+    width: 100%;
+    height: 149px;
+    display: block;
+}
+
+#url-source-option{
+    background-color: red;
+}
+
+#browse-source-option{
+    background-color: violet;
+}
+
+.source-option:hover{
+    cursor: pointer;
+    font-style: italic;
+    text-transform: uppercase;
+}
+
+.source-option-page{
+    width: 100%;
+    height: 300px;
+    display: none;
+}
+
+.hide-source-option-page-button{
+    background-image: url('../../media/img/back-button-icon.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    border: 2px white solid;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 5% auto;
+    display: block;
+}
+
+.hide-source-option-page-button:hover{
+    cursor: pointer;
+    border: 5px white dashed;
+}
+
+#landmark-oriented-experience-button{
+    background-image: url('../../media/img/landmark.png');
+    background-size: 50% 80%;
+    background-position: center center;
+    
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#landmark-oriented-experience-button:hover{
+    color: white;
+}
+
+#landmark-oriented-experience-button:hover, #hand-oriented-experience-button:hover{
+    font-size: 1.3em;
+    text-indent: 0%;
+}
+
+#face-oriented-experience-button{
+    background-image: url('../../media/img/face-icon.png');
+    background-size: 60% 60%;
+    background-position: center center;
+}
+
+#hand-oriented-experience-button{
+    background-image: url('../../media/img/hand-icon-animation.gif');
+    background-size: 100% 100%;
+    
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#url-source-input{
+    display: block;
+    width: 150px;
+    height: 25px;
+    margin: 10px auto;
+    border-radius: 5px;
+    font-family: monospace;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px white solid;
+}
+
+#url-source-input:focus{
+    outline: none;
+}
+
+.upload-model-source-button{
+    display: block;
+    width: 75px;
+    height: 25px;
+    border-radius: 5px;
+    margin: 2% auto;
+    text-align: center;
+    line-height: 25px;
+    vertical-align: middle;
+    font-family: monospace;
+    color: black;
+    background-color: white;
+    cursor: pointer;
+}
+
+.upload-model-source-button:focus{
+    outline: none;
+}
+
+#browse-model-options-container{
+    width: 100%;
+    height: 100px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.model-icon{
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 5px 12px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.model-icon:hover{
+    background-color: yellow;
+}
+
+#eiffel-tower-model{
+    background-image: url('../../media/img/eiffel-tower-icon.png');
+    background-size: 100% 100%;
+}
+
+#soccer-ball-model{
+    background-image: url('../../media/img/soccer-ball-icon.png');
+    background-size: 100% 100%;
+}
+
+#car-model{
+    background-image: url('../../media/img/car-icon.png');
+    background-size: 100% 100%;
+}
+
+.selected-model-icon{
+    background-color: greenyellow;
+}
+
+body::-webkit-scrollbar {
+    width: 0.5em;
 }

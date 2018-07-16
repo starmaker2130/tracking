@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset='utf-8' />
+                <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+                <title>AR Template | v 0.9.1</title>
+                <link rel='stylesheet' type='text/css' href='../../css/roomsapp/profile.css' />
+                <script src='../../js/jquery-3.2.1.min.js'></script>
+                <script src='../../js/aframe.min.js'></script>
+                <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
+                <script src='../../js/ar.min.js'></script>
+                <script>
+                    var sessionManager;
+
+                    function requestFullScreen(element) { //    makes the application fullscreen on fullscreen equipped browsers
+                        var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen; // Supports most browsers and their versions.
+
+                        if (requestMethod) { // Native full screen.
+                            requestMethod.call(element);
+                        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                            var wscript = new ActiveXObject("WScript.Shell");
+                            if (wscript !== null) {
+                                wscript.SendKeys("{F11}");
+                            }
+                        }
+                    }
+
+                    function initializeSession(data){
+                        sessionManager = {
+                            audio: {
+                                player: null,
+                                isPlaying: false,
+                                focus: null,
+                                state: 0 // 0 = inactive; 1 = playing; 2 = paused
+                            },
+                            application: {
+                                focus: 0, // 0 = home; 1 = audio; 2 = visual; 3 = search
+                                players: {
+                                    available: [
+                                        'audioAR',
+                                        'visualAR'
+                                    ],
+                                    loaded: null
+                                }
+                            },
+                            visual: {
+                                player: null,
+                                isPlaying: false,
+                                focus: null,
+                                state: 0 // 0 = inactive; 1 = playing; 2 = paused
+                            },
+                        };
+
+                       // loadAREnvironment(0);
+                        /**/
+
+                        sessionManager.audio.focus = 0;
+                    }
+
+                    $(document).ready(function(){
+                        initializeSession();
+
+                        // FIRST STAGE
+                        $('#launch-application-page').click(function(){
+
+                            console.log('application launch...');
+
+                            var elem = document.body;
+                            //requestFullScreen(elem);
+
+                            $(this).animate({
+                                height: 0
+                            }, 2500, function(){
+                                $(this).hide();
+                            });
+                        });
+
+                    });
+                </script>
+            </head>
+            <body>
+                <div id='launch-application-page' class='entry-layer overlay'>
+                    <div id='instructions'>
+                        tap anywhere
+                        <div id='logo'></div>
+                        to launch app
+                    </div>
+                </div>
+                <div id='main-app-container' class='viewer-layer'>
+                <a-scene embedded>
+                    <a-assets>
+                        <img id='floor-texture' src='../../media/texture/grid_pattern.png' preload='true' />
+                    </a-assets><a-sphere color="yellow" position="1.48 2.21 0" radius="1"></a-sphere><a-tetrahedron color="green" position="2.9 1.18 0" radius="1"></a-tetrahedron><a-entity obj-model="obj: url(media/model/eiffel-tower.obj); mtl: url(media/model/eiffel-tower.mtl)" scale="0.05 0.05 0.05" color="blue" position="5.58 1.65 0"></a-entity>
+            <!--<a-entity id='floor'
+                      geometry='primitive: plane; width: 100; height: 100;'
+                      material='src: #floor-texture; repeat: 100 100;'
+                      position='0 0 0'
+                      rotation='-90 0 0'>
+            </a-entity>-->
+            
+            <a-entity position="3 1.5 5">
+                <a-entity camera="active: true" look-controls wasd-controls></a-entity>
+            </a-entity>
+
+            <a-sky material='transparent: true; opacity: 0; color: white;'></a-sky></a-scene></div></body></html>

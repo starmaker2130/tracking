@@ -26,12 +26,13 @@ var config = {
         './media/pattern',
         './media/img',
         './media/sounds',
-        './media/models',
+        './media/model',
         './uploads',
         './drafts/docs',
         './media/upload',
         './media/room',
         './media/img/bg',
+        './media/room/media/model'
     ]
 };
 
@@ -227,6 +228,11 @@ app.get('/drafts/docs/:doc_id', function(req, res){
 app.get('/media/room/:room_id', function(req, res){
     var room_id = req.params.room_id;
     res.sendFile(room_id+'.html', {root: dir[12]});
+});
+
+app.get('/media/room/media/model/:room_model_id', function(req, res){
+    var room_model_id = req.params.room_model_id;
+    res.sendFile(room_model_id, {root: dir[14]});
 });
 
 app.get('/media/img/bg/:img_id', function(req, res){
@@ -509,7 +515,7 @@ io.sockets.on('connection', function(socket){
                 break;
             case 1: // face oriented
                 //facialRecognitionTest(socket, 0, 100);
-                facialRecognitionTest(socket, 1, 1000);
+                facialRecognitionTest(socket, 1, 250);
                 break;
             case 2: // hand oriented
                 //gestureTrackingTest(socket, 0, 100);
@@ -532,6 +538,7 @@ io.sockets.on('connection', function(socket){
     
     socket.on('addObjectToFaceOrientedScene', function(data){
         console.log('TODO: add object to face scenery');
+        
         // TODO change global variable switch that triggers buffer output from that of the face box (eventually mesh) mesh to that of a mask, sunglasses, or heads up display
         // TODO to swipe through the options after the initial change gesture tracking should be involved, e.g. making a motion to wipe your face brings up a new mask
     });
@@ -677,8 +684,10 @@ io.sockets.on('connection', function(socket){
                     </a-assets>`+experience+`</a-scene></div></body></html>`;
         
         setTimeout(function(){
-            objectsInSceneHandler.webcam.release();
-            //objectsInSceneHandler.webcam = null;
+            if(type==2){
+                objectsInSceneHandler.webcam.release();
+                //objectsInSceneHandler.webcam = null;    
+            }
             
             socket.emit('loadUserARExperience', {status: 1, source: experience});
             
@@ -735,12 +744,17 @@ function compileObjectMarkup(item, markup){
         z: 0
     };
     
-    var objectName = objectsInSceneHandler.objectList[i];var objectGeometryLib = {
+    var objectName = objectsInSceneHandler.objectList[i];
+    var objectGeometryLib = {
         'sphere': `<a-sphere color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}" radius="1"></a-sphere>`,
         'tetra': `<a-tetrahedron color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}" radius="1"></a-tetrahedron>`,
         'cube': `<a-box color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}"  depth="1" height="1" width="1"></a-box>`,
-        'model': `<a-sphere color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}" radius="1"></a-sphere>`
+        'model': `<a-entity obj-model="obj: url(media/model/eiffel-tower.obj); mtl: url(media/model/eiffel-tower.mtl)" scale="0.05 0.05 0.05" color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}"></a-entity>`
     };
+    
+    if(objectName=='model'){
+        
+    }
     
     objectMarkup += objectGeometryLib[objectName];
     return objectMarkup;
@@ -926,6 +940,8 @@ function gestureTrackingTest(source, target, renderRate){
     const green = new cv.Vec(0, 255, 0);
     const red = new cv.Vec(0, 0, 255);
     
+    const pointColor = new cv.Vec(255, 255, 255);
+    
     objectsInSceneHandler.gestureInterval = setInterval(function(){
         wCap.readAsync(function(err, frame){
             if(frame.empty){
@@ -963,7 +979,8 @@ function gestureTrackingTest(source, target, renderRate){
             const result = resizedImg.copy();
             const ballScene = resizedImg.copy();
               // draw bounding box and center line
-            resizedImg.drawContours([handContour], blue, { thickness: 2 });
+
+            resizedImg.drawContours([handContour], pointColor, { thickness: 2 }); //previous version: blue
             
                         
           //  if(verticesWithValidAngle[0].d1!='undefined'){
@@ -971,7 +988,7 @@ function gestureTrackingTest(source, target, renderRate){
                 const xValue = verticesWithValidAngle[0].d1.x;
                 const vertext = verticesWithValidAngle[0].d1;
                 //console.log(xValue);   
-                ballScene.drawCircle(vertext, 50, blue, -5);            
+                ballScene.drawCircle(vertext, 20, pointColor, -5);       // previous version: 50, blueblue
                 
                 if(objectsInSceneHandler.saveLastVertex){
                     objectsInSceneHandler.points.push(vertext);
@@ -990,22 +1007,25 @@ function gestureTrackingTest(source, target, renderRate){
               // draw points and vertices
             verticesWithValidAngle.forEach(function(v){
         
-                resizedImg.drawLine( v.pt, v.d1, { color: green, thickness: 2 });
-                resizedImg.drawLine(v.pt, v.d2, { color: green, thickness: 2 });
+                // previous version: the section below was not commented out
+                
+            /*    resizedImg.drawLine( v.pt, v.d1, { color: green, thickness: 2 });
+                resizedImg.drawLine(v.pt, v.d2, { color: green, thickness: 2 });*/
                 resizedImg.drawEllipse(
-                    new cv.RotatedRect(v.pt, new cv.Size(20, 20), 0),
+                    new cv.RotatedRect(v.pt, new cv.Size(10, 10), 0), // previous version: cv.Size(20, 20, 0)
             
                     { color: red, thickness: 2 }
                 );
+                
                 result.drawEllipse(
-                    new cv.RotatedRect(v.pt, new cv.Size(20, 20), 0),
+                    new cv.RotatedRect(v.pt, new cv.Size(10, 10), 0), // previous version: cv.Size(20, 20, 0)
                     { color: red, thickness: 2 }
                 );
             });
             
             for(var i=0; i<objectsInSceneHandler.points.length; i++){
-                resizedImg.drawCircle(objectsInSceneHandler.points[i], 50, green, -5);
-                ballScene.drawCircle(objectsInSceneHandler.points[i], 50, red, -5);
+                resizedImg.drawCircle(objectsInSceneHandler.points[i], 25, green, -5);
+                ballScene.drawCircle(objectsInSceneHandler.points[i], 25, red, -5);
             }
               // display detection result  
             const numFingersUp = verticesWithValidAngle.length-2;

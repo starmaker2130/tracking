@@ -6,7 +6,6 @@
     <title>post.AR v. 0.2.0</title>
     <link rel='stylesheet' type='text/css' href='../css/postARapp/postar.css' />
     <script src='../js/socket.io.js'></script>
-    <!--<script src='../js/aframe.min.js.map'></script>-->
     <script src='../js/aframe.min.js'></script>
     <script src='../js/jquery-3.2.1.min.js'></script>
     <script src='../js/Eye.js'></script>
@@ -96,10 +95,30 @@
         <div id='canvas-container'><!-- z: -50 | 50 -->
             <canvas id="canvas"></canvas>
         </div>
+        <div id='specify-model-source-container'>
+            <div id='source-option-container'>
+                <input type='button' id='url-source-option' class='source-option' value='url'/>
+                <input type='button' id='browse-source-option' class='source-option' value='browse' />
+            </div>
+            <div id='url-source-option-page' class='source-option-page'>
+                <input class='hide-source-option-page-button' type='button' value=''/>
+                <input type='text' id='url-source-input' placeholder='url-to-file-source' />
+                <input id='upload-url-button' class='upload-model-source-button' type='button' value='upload'/>
+            </div>
+            <div id='browse-source-option-page' class='source-option-page'>
+                <input class='hide-source-option-page-button' type='button' value=''/>
+                <div id='browse-model-options-container'>
+                    <div id='eiffel-tower-model' class='model-icon'></div>
+                    <div id='soccer-ball-model' class='model-icon'></div>
+                    <div id='car-model' class='model-icon'></div>
+                </div>
+                <input id='upload-browse-button' class='upload-model-source-button' type='button' value='upload'/>
+            </div>
+        </div>
     </div>
     <div id='experience-type-dashboard-container'>
             <input type='button' id='landmark-oriented-experience-button' class='experience-type-button' value='[ L ]'/>
-            <input type='button' id='face-oriented-experience-button' class='experience-type-button' value='[ F ]'/>
+            <input type='button' id='face-oriented-experience-button' class='experience-type-button' value=''/>
             <input type='button' id='hand-oriented-experience-button' class='experience-type-button' value='[ H ]'/>
         </div>
 </body>

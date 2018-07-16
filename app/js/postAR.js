@@ -18,26 +18,30 @@ function UserChannel(socket){
 }
 
 function gotDevices(deviceInfos) {
-    var videoSelect = document.querySelector('select#videoSource');
+    var videoSelect = document.getElementById('videoSource');
     for (var i = 0; i !== deviceInfos.length; ++i) {
         var deviceInfo = deviceInfos[i];
         var option = document.createElement('option');
         option.value = deviceInfo.deviceId;
+        
+        console.log('['+i+'] '+deviceInfo.kind);
         
         if (deviceInfo.kind === 'videoinput') {
             option.text = deviceInfo.label || 'camera ' + (videoSelect.length + 1);
             videoSelect.appendChild(option);
         }
         else {
-            console.log('Found one other kind of source/device: ', deviceInfo);
+           // console.log('Found one other kind of source/device: ', deviceInfo);
         }
     }
 }
 
 function getStream() {
-    var videoSelect = document.querySelector('select#videoSource');
+    var videoSelect = document.getElementById('videoSource');
+    //console.log(videoSelect.value);
     
     if (window.stream) {
+       // console.log('stream flowing my guy!!!');
         window.stream.getTracks().forEach(function(track) {
             track.stop();
         });
@@ -55,7 +59,7 @@ function getStream() {
 function gotStream(stream) {
     window.stream = stream; // make stream available to console
     video.srcObject = stream;
-    //video.play();
+    video.play();
 }
 
 function handleError(error) {
@@ -89,7 +93,9 @@ var sessionManager = {
         currentlyOpen: -1, //=none; 0 = add/edit object; 1 = ; 2 = code;
     },
     builder: {
-        orientation: null
+        orientation: null,
+        addingModel: false,
+        addModelFromSource: null
     }
 };
 
@@ -156,7 +162,7 @@ function init(socket){ // starts the webcam or phone camera capture
     // Get access to the camera!
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Not adding `{ audio: true }` since we only want video now
-        navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch(handleError);
+       navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch(handleError);
 
         videoSelect.onchange = getStream;
         /*
@@ -188,24 +194,35 @@ function init(socket){ // starts the webcam or phone camera capture
     });
     
     document.getElementById('gesture-watch-button').addEventListener('click', function(){
-        var orientation = sessionManager.builder.orientation;
-        switch(orientation){
-            case 0: //  landmark oriented
-                socket.emit('addObjectToLandmarkOrientedScene');
-                break;
-            case 1: //  face oriented
-                socket.emit('addObjectToFaceOrientedScene');
-                break;
-            case 2: //  hand oriented
-                socket.emit('addObjectToHandOrientedScene');
-                break;
-            default:
-                break;
+        if(sessionManager.builder.addingModel==false){
+            var orientation = sessionManager.builder.orientation;
+            switch(orientation){
+                case 0: //  landmark oriented
+                    socket.emit('addObjectToLandmarkOrientedScene');
+                    break;
+                case 1: //  face oriented
+                    socket.emit('addObjectToFaceOrientedScene');
+                    break;
+                case 2: //  hand oriented
+                    socket.emit('addObjectToHandOrientedScene');
+                    break;
+                default:
+                    break;
+            }
+        }
+        else{
+            console.log('a model source must be specified before adding it to the scene.');
         }
     });
     
     document.getElementById('generate-experience-button').addEventListener('click', function(){
-        channel.emit('generateExperience', {type: sessionManager.builder.orientation});    
+        $('#specify-model-source-container').animate({
+            opacity: 0
+        }, 1000, function(){
+            $(this).hide();
+        });
+
+        channel.emit('generateExperience', {type: sessionManager.builder.orientation});
     });
     
     document.getElementById('register-experience-button').addEventListener('click', function(){
@@ -223,12 +240,104 @@ function init(socket){ // starts the webcam or phone camera capture
             registerCustomUserExperience(entry, channel);
         }
     });
+    
+    document.getElementById('upload-url-button').addEventListener('click', function(){
+        var url_input = $('#url-source-input').val();
+        if(url_input=='url-to-file-source'){
+            console.log('please enter a url source');
+        }
+        else{
+            console.log('sourcing model from url:');
+            console.log(url_input);
+            loadModelFromSource(url_input, 0);
+        }
+    });
+    
+    document.getElementById('upload-browse-button').addEventListener('click', function(){
+        var selection = $('.selected-model-icon').attr('id');
+        loadModelFromSource(selection, 1);
+    });
+    
+    $('.model-icon').click(function(){
+        var currentModel = sessionManager.builder.addModelFromSource;
+        if(currentModel==null){
+            $(this).addClass('selected-model-icon');    
+        }
+        else{
+            var prev = $('.selected-model-icon').attr('id');
+            $(`#${prev}`).removeClass('selected-model-icon');
+            $(this).addClass('selected-model-icon');
+        }
+    });
 }
 
 function registerCustomUserExperience(name, socket){
     var expName = name;
     var channel = socket;
     channel.emit('registerExperience', {userId: 1, name: expName});
+}
+
+function askForModelSource(source){
+    sessionManager.builder.addingModel = true;
+    
+    $('#specify-model-source-container').css({
+        display: 'block'
+    }).animate({
+        opacity: 1.0
+    }, 500, function(){
+         console.log('revealing model source query');
+        
+        $('#url-source-option').click(function(){
+            $('#source-option-container').animate({
+                opacity: 0
+            }, 250, function(){
+                $(this).hide();
+                    $('#url-source-option-page').show().animate({
+                    opacity: 1.0
+                }, 250, function(){
+                    console.log('url source option page shown.');
+                });
+            });
+        });
+        
+        $('#browse-source-option').click(function(){
+            $('#source-option-container').animate({
+                opacity: 0
+            }, 250, function(){
+                $(this).hide();
+                $('#browse-source-option-page').show().animate({
+                    opacity: 1.0
+                }, 250, function(){
+                    console.log('browse source option page shown.');
+                });
+            });
+        });
+    });
+}
+
+function loadModelFromSource(source, type){
+    switch(type){
+        case 0: //  url was provided as source
+            sessionManager.builder.addModelFromSource = source;
+            break;
+        case 1: //  model icon was clicked on for source
+            var lib = {
+                'eiffel-tower': '../../media/model/eiffel-tower.obj',   
+                'soccer-ball': '../../media/model/eiffel-tower.obj',
+                'car': '../../media/model/eiffel-tower.obj',
+            }
+            sessionManager.builder.addModelFromSource = lib[source];
+            break;
+        default:
+            break;
+    }
+    
+    $('#specify-model-source-container').animate({
+        opacity: 0
+    }, 500, function(){
+        $(this).hide();
+        sessionManager.builder.addingModel = false;
+    })
 }
 
 $(document).ready(function(){
@@ -259,7 +368,25 @@ $(document).ready(function(){
             display: 'block'
         }).animate({
             opacity: 1.0
-        }, 500);
+        }, 500, function(){
+            $('#object-type-list-container').on('change', function(){
+                var value = document.querySelector('select#object-type-list-container').value;
+                console.log(value);
+                if(value=='model'){
+                    askForModelSource();
+                }
+                else{
+                    var target = $('#specify-model-source-container');
+                    if(target.css('opacity')!=0){
+                        target.animate({
+                            opacity: 0
+                        }, 1000, function(){
+                            $(this).hide();
+                        });
+                    }
+                }
+            })
+        });
         
         $('.experience-type-button').animate({
             opacity: 0
