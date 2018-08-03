@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <title>cARd</title>
+    <style>
+        my-park{
+            color: black;
+            background-color: white;
+            display: block;
+            font-size: 15px;
+            font-family: monospace;
+            font-weight: bold;
+            text-align: center;
+            height: 500px;
+            width: 500px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -250px 0 0 -250px;
+            border: 2px black solid;
+            border-radius: 5px;
+        }
+        
+        .stop-container{
+            border: 2px black solid;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            cursor: pointer;
+            -webkit-transition: background-color 1s, border 1s; /* Safari */
+            transition: background-color 1s, border 1s;
+        }
+        
+        #stop-details-container{
+            border: 2px white solid;
+            border-radius: 5px;
+            background-color: #eeeeee;
+            box-shadow: 5px 5px 5px white;
+            width: 500px;
+            height: 200px;
+            display: none;
+            position: absolute;
+            z-index: 5;
+            cursor: pointer;
+            top: 50%;
+            left: 50%;
+            margin: 50px 0 0 -253px;
+            -webkit-transition: display 1s;
+            transition: display 1s;
+            
+        }
+        
+        .stop-container:hover{
+            border: 2px white dashed;
+            background-color: red;
+        }
+        
+    </style>
+    <script>
+        var ParkPrototype = Object.create(HTMLElement.prototype);
+       
+        ParkPrototype.addStop = function(target, containing){
+            var stopNum = target;
+            var stop = document.createElement('div');
+            stop.setAttribute('id', `stop-${stopNum}`);
+            stop.classList.add('stop-container');
+            
+            if(stopNum<containing){
+                document.getElementById('my-park').appendChild(stop);
+            }
+            
+        }
+        
+        ParkPrototype.revealStopDetails = function(target){
+            document.getElementById('stop-details-container').style.display = 'block';
+            console.log('TODO: build function that reveals stop information');
+        }
+        
+        ParkPrototype.init = function(){
+            var self = this;
+            var nonEmpty = false;
+            self.id = self.getAttribute('id');
+            self.admin = self.getAttribute('admin');
+            self.stops = self.getAttribute('stops');
+            var containing = self.childElementCount;
+            
+            var details = document.createElement('div');
+            details.id = 'stop-details-container';
+            document.getElementById(self.id).appendChild(details)
+            
+            for(var i =0; i<self.stops; i++){
+                self.addStop(i, containing);
+                nonEmpty = true;
+            }
+            
+            if(nonEmpty){
+                $('.stop-container').click(function(){
+                    var id = this.getAttribute('id');
+                    console.log(id);
+                    self.revealStopDetails(id);
+                });
+            }
+            
+            
+            
+            console.log(self.id);
+            console.log(self.admin);
+            console.log(self.stops);
+        };
+        
+        Object.defineProperty(ParkPrototype, 'id', {
+            value: null,
+            writable: true
+        });
+        
+        Object.defineProperty(ParkPrototype, 'admin', {
+            value: null,
+            writable: true
+        });
+        
+        Object.defineProperty(ParkPrototype, 'stops', {
+            value: null,
+            writable: true
+        });
+        
+        var ParkElement = document.registerElement('my-park', {
+            prototype: ParkPrototype
+        });
+        
+        var CardPrototype = Object.create(HTMLElement.prototype);
+        
+        Object.defineProperty(CardPrototype, 'name', {
+            value: null,
+            writable: true
+        });
+        
+        var CardElement = document.registerElement('hov-card', {
+            prototype: CardPrototype
+        });
+        
+        $(document).ready(function(){
+            var myPark= document.getElementById('my-park');
+            
+            myPark.init();//console.log(myPark);
+            
+//            RFIDElement.render(0);
+        });
+    </script>
+</head>
+<body>
+    <my-park id="my-park"
+             admin="p@m0"
+             stops="5">
+        <hov-card id='shady-grove'>
+        </hov-card>
+        <hov-card id='hishaih'>
+        </hov-card>
+        <hov-card id='noes'>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+        <hov-card id=''>
+        </hov-card>
+    </my-park>
+</body>    
+</html>

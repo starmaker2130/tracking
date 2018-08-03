@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <title>cARd</title>
+    <style>
+        my-rfid{
+            color: white;
+            background-color: black;
+            display: block;
+            font-size: 25px;
+            font-family: monospace;
+            font-weight: bold;
+            text-align: center;
+            height: 400px;
+            width: 300px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -200px 0 0 -150px;
+            border-radius: 5px;
+        }
+        
+        h2{
+            
+        }
+        
+        .rfid-metadata{
+            
+        }
+    </style>
+    <script>
+        
+        var RFIDPrototype = Object.create(HTMLElement.prototype);
+        
+        RFIDPrototype.render = function(target){
+            var self = this;
+            self.author = self.getAttribute('author');
+            self.storageCapacity = self.getAttribute('storageCapacity');
+            self.version = self.getAttribute('version');
+            self.mavEnabled = self.getAttribute('mavEnable');
+            self.mavType = self.getAttribute('mavType');
+            self.mavSrc = self.getAttribute('mavSrc')
+            //var id = self.getAttribute('id');
+            switch(target){
+                case 0: // standard gui
+                    var author = document.createElement('h2').appendChild(document.createTextNode(self.author));
+                    var storage = document.createElement('div').appendChild(document.createTextNode(self.storageCapacity));
+                    var version = document.createElement('div').appendChild(document.createTextNode(self.version));
+                    var mavEnabled = document.createElement('div').appendChild(document.createTextNode(self.mavEnabled));
+                    var mavType = document.createElement('div').appendChild(document.createTextNode(self.mavType));
+                    var mavSrc = document.createElement('div').appendChild(document.createTextNode(self.mavSrc));
+
+                    self.appendChild(author);
+                    self.appendChild(storage);
+                    self.appendChild(version);
+                    self.appendChild(mavEnabled);
+                    self.appendChild(mavType);
+                    self.appendChild(mavSrc);
+                    
+                    break;
+                case 1: // ar gui
+                    break;
+                case 2: // vr gui
+                    break;
+                case 3: // mr gui
+                    break;
+                default:
+                    break;
+            }
+        };
+        
+        Object.defineProperty(RFIDPrototype, 'author', {
+            value: null,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'embedded', {
+            value: {
+                core: true,
+                target: 'cARd'
+            },
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'storageCapacity', {
+            value: 512,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'version', {
+            value: null,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'mavEnabled', {
+            value: false,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'mavType', {
+            value: -1,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'mavSrc', {
+            value: '',
+            writable: true
+        });
+        
+        var RFIDElement = document.registerElement('my-rfid', {
+            prototype: RFIDPrototype
+        });
+        
+        $(document).ready(function(){
+            var myRFID = document.getElementById('rfid');
+            
+            console.log(myRFID);
+            myRFID.render(0);
+//            RFIDElement.render(0);
+        });
+    </script>
+</head>
+<body>
+    <my-rfid id='rfid' author='patrice-morgan' storageCapacity='1024' version='0.1.0' mavEnabled='true' mavType='0' mavSrc='../touch.html'>
+    </my-rfid>
+</body>    
+</html>

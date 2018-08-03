@@ -95,7 +95,8 @@ var sessionManager = {
     builder: {
         orientation: null,
         addingModel: false,
-        addModelFromSource: null
+        addModelFromSource: null,
+        scale: null
     }
 };
 
@@ -222,7 +223,7 @@ function init(socket){ // starts the webcam or phone camera capture
             $(this).hide();
         });
 
-        channel.emit('generateExperience', {type: sessionManager.builder.orientation});
+        channel.emit('generateExperience', {builder: sessionManager.builder});
     });
     
     document.getElementById('register-experience-button').addEventListener('click', function(){
@@ -243,19 +244,30 @@ function init(socket){ // starts the webcam or phone camera capture
     
     document.getElementById('upload-url-button').addEventListener('click', function(){
         var url_input = $('#url-source-input').val();
-        if(url_input=='url-to-file-source'){
+        var scale_input = $('#model-scale-input').val();
+        
+        if(url_input=='url-to-file-source'||url_input==''){
             console.log('please enter a url source');
         }
         else{
             console.log('sourcing model from url:');
             console.log(url_input);
-            loadModelFromSource(url_input, 0);
+            
+            if(scale_input==''||scale_input=='xx yy zz'){
+                console.log(`default scale chosen: ${scale_input}`);
+                scale_input = '0.1 0.1 0.1';
+            }
+            else{
+                console.log(`scale set to ${scale_input}`);
+            }
+             
+            loadModelFromSource(url_input, 0, scale_input);
         }
     });
     
     document.getElementById('upload-browse-button').addEventListener('click', function(){
         var selection = $('.selected-model-icon').attr('id');
-        loadModelFromSource(selection, 1);
+        loadModelFromSource(selection, 1, '0.1 0.1 0.1');
     });
     
     $('.model-icon').click(function(){
@@ -315,7 +327,7 @@ function askForModelSource(source){
     });
 }
 
-function loadModelFromSource(source, type){
+function loadModelFromSource(source, type, scale){
     switch(type){
         case 0: //  url was provided as source
             sessionManager.builder.addModelFromSource = source;
@@ -331,6 +343,8 @@ function loadModelFromSource(source, type){
         default:
             break;
     }
+    
+    sessionManager.builder.scale = scale;
     
     $('#specify-model-source-container').animate({
         opacity: 0
@@ -449,7 +463,11 @@ $(document).ready(function(){
     socket.on('getCurrentObjectType', function(data){
         var objectType = $('#object-type-list-container option:selected').text();
         console.log(`just added a ${objectType} to the scene.`);
-        socket.emit('recordCurrentObjectType', {type: objectType});
+        socket.emit('recordCurrentObjectType', {
+            type: objectType,
+            src: sessionManager.builder.addModelFromSource,
+            scale: sessionManager.builder.scale
+        });
     });
     
     socket.on('completeRegistration', function(data){

@@ -29,6 +29,7 @@
             <option value="tetrahedron" class='object-type-list-item'>tetra</option>
             <option value="cube" class='object-type-list-item'>cube</option>
             <option value="model" class='object-type-list-item'>model</option>
+            <option value="text" class='object-type-list-item'>text</option>
         </select>
         <div id='rooms-title'>
             post.AR v. 0.2.0
@@ -103,6 +104,7 @@
             <div id='url-source-option-page' class='source-option-page'>
                 <input class='hide-source-option-page-button' type='button' value=''/>
                 <input type='text' id='url-source-input' placeholder='url-to-file-source' />
+                <input type='text' id='model-scale-input' placeholder='xx yy zz' />
                 <input id='upload-url-button' class='upload-model-source-button' type='button' value='upload'/>
             </div>
             <div id='browse-source-option-page' class='source-option-page'>
@@ -113,6 +115,11 @@
                     <div id='car-model' class='model-icon'></div>
                 </div>
                 <input id='upload-browse-button' class='upload-model-source-button' type='button' value='upload'/>
+            </div>
+            <div id='text-option-page' class='source-option-page'>
+                <input class='hide-source-option-page-button' type='button' value=''/>
+                <input type='text' id='url-source-input' placeholder='hello universe' />
+                <input id='upload-url-button' class='upload-model-source-button' type='button' value='upload'/>
             </div>
         </div>
     </div>

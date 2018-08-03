@@ -557,7 +557,15 @@ io.sockets.on('connection', function(socket){
     
     socket.on('generateExperience', function(data){
         console.log(objectsInSceneHandler.points);
-        var type = data.type;
+        var builder = data.builder;
+        var type = builder.orientation;
+        console.log('--------------------------');
+        console.log('builder:');
+        console.log(builder);
+        console.log('--------------------------');
+        console.log('type:')
+        console.log(type);
+        console.log('--------------------------');
         
         switch(type){
             case 0:
@@ -588,7 +596,7 @@ io.sockets.on('connection', function(socket){
                 
         socket.emit('cleanUpExperienceBuilderScene', {amountCreated: objectsInSceneHandler.points.length});
         
-        var experience = buildUserARExperience();
+        var experience = buildUserARExperience();   // builder
         objectsInSceneHandler.build.markup = `<!DOCTYPE html>
             <html>
             <head>
@@ -700,7 +708,9 @@ io.sockets.on('connection', function(socket){
     
     socket.on('recordCurrentObjectType', function(data){
         var type = data.type;
-        objectsInSceneHandler.objectList.push(type);
+        var source = data.src;
+        var scale = data.scale;
+        objectsInSceneHandler.objectList.push({type: type, src: source, scale: scale});
     });
     
     socket.on('registerExperience', function(data){
@@ -724,7 +734,7 @@ io.sockets.on('connection', function(socket){
     });
 });
 
-function compileObjectMarkup(item, markup){
+function compileObjectMarkup(item, markup){ //, experienceBuilder
     var objectMarkup = markup;
     var i = item;
     var colorArr = [
@@ -744,28 +754,39 @@ function compileObjectMarkup(item, markup){
         z: 0
     };
     
-    var objectName = objectsInSceneHandler.objectList[i];
+    var defaultModelMarkup = `<a-entity obj-model="obj: url(media/model/eiffel-tower.obj); mtl: url(media/model/eiffel-tower.mtl)" scale="0.05 0.05 0.05" position="${filter.x} ${filter.y} ${filter.z}"></a-entity>`;
+    
+    var objectName = objectsInSceneHandler.objectList[i].type;
+    
     var objectGeometryLib = {
         'sphere': `<a-sphere color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}" radius="1"></a-sphere>`,
         'tetra': `<a-tetrahedron color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}" radius="1"></a-tetrahedron>`,
         'cube': `<a-box color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}"  depth="1" height="1" width="1"></a-box>`,
-        'model': `<a-entity obj-model="obj: url(media/model/eiffel-tower.obj); mtl: url(media/model/eiffel-tower.mtl)" scale="0.05 0.05 0.05" color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}"></a-entity>`
+        'model': null
     };
     
     if(objectName=='model'){
+        var modelSource = objectsInSceneHandler.objectList[i].src;
+        var modelScale = objectsInSceneHandler.objectList[i].scale;
         
+        defaultModelMarkup = `<a-entity obj-model="obj: url(${modelSource});" scale="${modelScale}" color="${colorArr[i]}" position="${filter.x} ${filter.y} ${filter.z}"></a-entity>`;
+        
+        console.log(`adding model located at ${modelSource} with scale ${modelScale}`);
     }
+    
+    objectGeometryLib.model = defaultModelMarkup;
     
     objectMarkup += objectGeometryLib[objectName];
     return objectMarkup;
 }
 
-function buildUserARExperience(){
+function buildUserARExperience(){   //experienceBuilder
+    //var builder = experienceBuilder;
     //console.log('TODO: build user ar experience');
     var objectMarkup = '';
     
     for(var i=0; i<objectsInSceneHandler.points.length; i++){
-        objectMarkup = compileObjectMarkup(i, objectMarkup);
+        objectMarkup = compileObjectMarkup(i, objectMarkup);    //, builder
     }
     
     

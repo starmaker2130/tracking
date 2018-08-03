@@ -779,10 +779,8 @@ body, html {
     overflow: hidden;
 }
 
-#url-source-input{
+#url-source-input, #model-scale-input{
     display: block;
-    width: 150px;
-    height: 25px;
     margin: 10px auto;
     border-radius: 5px;
     font-family: monospace;
@@ -791,7 +789,17 @@ body, html {
     border: 2px white solid;
 }
 
-#url-source-input:focus{
+#model-scale-input{
+    width: 100px;
+    height: 25px;
+}
+
+#url-source-input{
+    width: 150px;
+    height: 25px;
+}
+
+#url-source-input:focus, #model-scale-input:focus{
     outline: none;
 }
 
