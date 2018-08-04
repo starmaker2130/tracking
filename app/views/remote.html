@@ -3,7 +3,7 @@
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>cARd | remote v. 0.2.0</title>
+    <title>cARd | remote v. 0.3.0</title>
     <link rel='stylesheet' href='../css/remote.css' type="text/css" />
     <script src='../js/socket.io.js'></script>
     <script src='../js/jquery-3.2.1.min.js'></script>
@@ -374,10 +374,43 @@
                             });
                             break;
                         case 'pARk':
+                            $('#media-overlay').animate({
+                                height: 0
+                            }, 1000, function(){
+                                $(this).hide();
+                            });
+                            
+                            $('#pARk-page').animate({
+                                opacity: 0
+                            }, 500, function(){
+                                $(this).hide();
+                            });
                             break;
                         case 'share':
+                            $('#media-overlay').animate({
+                                height: 0
+                            }, 1000, function(){
+                                $(this).hide();
+                            });
+                            
+                            $('#share-page').animate({
+                                opacity: 0
+                            }, 500, function(){
+                                $(this).hide();
+                            });
                             break;
                         case 'hov':
+                            $('#media-overlay').animate({
+                                height: 0
+                            }, 1000, function(){
+                                $(this).hide();
+                            });
+                            
+                            $('#hov-page').animate({
+                                opacity: 0
+                            }, 500, function(){
+                                $(this).hide();
+                            });
                             break;
                         case 'faq':
                             break;
@@ -463,12 +496,53 @@
                             });
                             break;
                         case 'pARk':
+                            $('#view-remote').show().animate({
+                                opacity: 1.0
+                            }, 1000);
+                            
+                             $('#media-overlay').show().animate({
+                                height: '100%'
+                            }, 1000);
+                            
+                            $('.media-page:not(#pARk-page)').hide();
+                            
+                            $('#pARk-page').show().animate({
+                                opacity: 1.0
+                            }, 500);
+                            
                             console.log('TODO: (1) reveal camera; (2) show AR map of network');
                             break;
                         case 'share':
+                            $('#view-remote').show().animate({
+                                opacity: 1.0
+                            }, 1000);
+                            
+                             $('#media-overlay').show().animate({
+                                height: '100%'
+                            }, 1000);
+                            
+                            $('.media-page:not(#share-page)').hide();
+                            
+                            $('#share-page').show().animate({
+                                opacity: 1.0
+                            }, 500);
                             console.log('TODO: (1) reveal camera; (2) show AR icons in menu (3) add backend functionality and toggle feature');
                             break;
                         case 'hov':
+                            $('#view-remote').show().animate({
+                                opacity: 1.0
+                            }, 1000);
+                            
+                             $('#media-overlay').show().animate({
+                                height: '100%'
+                            }, 1000);
+                            
+                            $('.media-page:not(#hov-page)').hide();
+                            
+                            $('#hov-page').show().animate({
+                                opacity: 1.0
+                            }, 500);
+                            
                             console.log('TODO: (1) reveal camera; (2) show AR icons in menu (3) add backend functionality and toggle feature');
                             break;
                         case 'faq':
@@ -503,6 +577,48 @@
 </head>
 <body>
     <input type='button' value='x' id='view-remote' />
+    <div id='media-overlay'>
+        <div id='pARk-page' class='media-page'>
+            <div id='clock-container'>08:23</div>
+            <div id='location-name-container'>College Park</div>
+            <div id='page-content-container'>
+                <div id='green-metro-line-container'>
+                    <div class='metro-station-marker'></div>
+                </div>
+                <input id='browse-pARk-button' class='browse-button' type='button' value='browse pARk' />
+                <input id='explore-community-button' class='browse-button' type='button' value='explore @dmv' />
+                <div id='pARk-map' class='map-container'>
+                    
+                </div>
+                <div id='community-map' class='map-container'>
+                
+                </div>
+            </div>
+        </div>
+        <div id='share-page' class='media-page'>
+            <div id='share-options-container'>
+                <div id='share-options-title'>share</div>
+                <input id='email-share-button' class='share-button' type='button' value='' />
+                <input id='twitter-share-button' class='share-button' type='button' value='' />
+                <input id='instagram-share-button' class='share-button' type='button' value='' />
+                <input id='medium-share-button' class='share-button' type='button' value='' />
+                <input id='pARk-share-button' class='share-button' type='button' value='' />
+            </div>
+        </div>
+        <div id='hov-page' class='media-page'>
+            <div id='additional-options-container'>
+                <div id='additional-options-title'>
+                    Our House
+                </div>
+                <input id='view-mission-button' class='additional-option-button' type='button' value='mission'/>
+                <input id='view-roster-button' class='additional-option-button' type='button' value='roster'/>
+                <input id='view-docs-button' class='additional-option-button' type='button' value='docs'/>
+            </div>
+        </div>
+        <div id='faq-page' class='media-page'>
+            
+        </div>
+    </div>
     <div id='camera-overlay'>
         <video id="video" autoplay></video>
         <div id='camera-overlay-dashboard'>

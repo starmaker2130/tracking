@@ -9,6 +9,9 @@ body, html{
     background-color: #000;
 }
 
+input[type="button"]:focus{
+    outline: none;
+}
 
 #selected-profile-name, #selected-store-item-title{
     width: 100%;
@@ -1191,4 +1194,214 @@ body, html{
     color: white;
     background-color: black;
     border-radius: 5px;
+}
+
+
+#media-overlay{
+    z-index: 300;
+    width: 100%;
+    height: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.media-page{
+    display: none;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#clock-container{
+    font-family: monospace;
+    height: 75px;
+    line-height: 75px;
+    color: white;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+#location-name-container{
+    font-family: monospace;
+    color: white;
+    height: 75px;
+    width: 100%;
+    font-weight: 900;
+    font-size: 1.57m;
+    text-align: center;
+}
+#page-content-container{
+    width: 80%;
+    height: 300px;
+    margin: 2% auto;
+}
+#green-metro-line-container{
+    width: 200px;
+    margin: 20px auto;
+    background-color: limegreen;
+    height: 30px;
+}
+
+.metro-station-marker{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 2px black solid;
+    margin: 0 auto;
+}
+
+.browse-button{
+    width: 100%;
+    height: 40%;
+    margin: 5% 0;
+    cursor: pointer;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 2px white solid;
+    border-radius: 15px;
+    font-family: monospace;
+    font-size: 1.4em;
+}
+
+.browse-button:hover{
+    background-color: rgba(255, 255, 255, 1.0);
+    color: black;
+    font-weight: 900;
+}
+
+.map-button{
+    width: 250px;
+    height: 75px;
+    border-radius: 10px;
+    border: 2px white solid;
+    background-color: rgba( 255, 255, 255, 0.2);
+    color: white;
+    font-weight: 900;
+    text-align: center;
+}
+
+.map-container{
+    width: 90%;
+    height: 300px;
+    margin: 10px auto;
+}
+
+#share-options-container{
+    width: 80%;
+    height: 80%;
+    display: block;
+    margin: 10% auto 0 auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.share-button{
+    width: 75px;
+    height: 75px;
+    border: 0;
+    border-radius: 50%;
+    margin: 20px 30px;
+    display: inline-block;
+    cursor: pointer;
+    color: black;
+    font-family: monospace;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+#share-options-title{
+    text-align: center;
+    height: 50px;
+    width: 100%;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 900;
+    line-height: 50px;
+    font-family: monospace;
+}
+
+.share-button:hover{
+    border: 2px white solid;
+    color: white;
+}
+
+#email-share-button{
+    background-image: url('../media/img/email-icon.png');
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#twitter-share-button{
+    background-image: url('../media/img/twitter-icon.png');
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#instagram-share-button{
+    background-image: url('../media/img/ig-logo.png');
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#medium-share-button{
+    background-image: url('../media/img/medium-logo.png');
+    background-size: 100% 100%;
+}
+
+#pARk-share-button{
+    background-image: url('../media/img/globe-icon.png');
+    background-size: 90% 90%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: white;
+}
+
+#additional-options-container{
+    width: 100%;
+    height: 300px;
+}
+
+#additional-options-title{
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    color: white;
+    font-family: monospace;
+    font-size: 1.5em;
+    font-weight: 900;
+}
+
+.additional-option-button{
+    width: 100%;
+    height: 31%;
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    text-align: center;
+    font-family: monospace;
+    font-weight: 900;
+    font-size: 1.3em;
+    color: white;
+}
+
+.additional-option-button:hover{
+    background-color: rgba(255, 255, 255, 1.0);
+    color: black;
+}
+
+#view-mission-button{
+    
+}
+
+#view-roster-button{
+
+}
+
+#view-docs-button{
+    
 }
