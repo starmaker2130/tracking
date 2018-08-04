@@ -9,9 +9,6 @@ body, html{
     background-color: #000;
 }
 
-.profile-data-field{
-    font-family: monospace;
-}
 
 #selected-profile-name, #selected-store-item-title{
     width: 100%;
@@ -130,6 +127,38 @@ body, html{
     /*background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center center;*/
+}
+
+#wall{
+    display: none;
+}
+
+::-webkit-scrollbar {
+    width: 0.5em;
+    height: 0.5em
+}
+
+#wall-title{
+    display: inline-block;
+    font-family: monospace;
+    font-size: 1.3em;
+    width: 100%;
+    height: 35px;
+    text-align: center;
+    text-align: center;
+    line-height: 35px;
+    vertical-align: top;
+    font-style: italic;
+    text-transform: uppercase;
+    color: black;
+    background-color: white;
+    border-radius: 15px;
+}
+
+#wall-header-container{
+    height: 75px;
+    width: 250px;
+    margin: 2% auto;
 }
 
 .wall-option{
@@ -265,6 +294,115 @@ body, html{
     color: white;
 }
 
+#camera-overlay-dashboard{
+    position: absolute;
+    width: 100%;
+    height: 75px;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+.experience-type-button{
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    margin: 5px 15px;
+    
+    border-width: 0;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.7);
+    
+    font-family: monospace;
+    font-weight: 900;
+    text-align: center;
+    color: white;
+    
+    vertical-align: top;
+}
+
+.experience-type-button:hover{
+    background-color: white;
+    cursor: pointer;
+    color: black;
+}
+
+.experience-type-button:focus{
+    outline: none;
+}
+
+#videoSource{
+    width: 50px;
+    height: 50px;
+    margin: 7px 10px;
+    border-radius: 15px;
+    border: 3px white solid;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+#view-remote{
+    display: none;
+    border-radius: 50%;
+    background-color: white;
+    color: black;
+    height: 50px;
+    width: 50px;
+    position:absolute;
+    top: 5%;
+    right: 5%;
+    text-align: center;
+    line-height: 50px;
+    z-index: 500;
+    opacity: 0;
+}
+
+#view-remote:hover{
+    color: black;
+    font-weight: bold;
+}
+
+#view-remote:focus{
+    outline: none;
+}
+
+#landmark-oriented-experience-button{
+    background-image: url('../media/img/landmark.png');
+    background-size: 50% 80%;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#face-oriented-experience-button{
+    background-image: url('../media/img/face-icon.png');
+    background-size: 70% 80%;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#hand-oriented-experience-button{
+    background-image: url('../media/img/hand-icon.png');
+    background-size: 70% 80%;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#videoSource:focus{
+    outline: none;
+}
+
+#video{
+    position: absolute;
+    display: block;
+    width: 600px;
+    height: 480px;
+    top: 50%;
+    left: 50%;
+    margin: -240px auto 0 -300px;
+}
+
 #main-app-container{
     cursor: pointer;
     position: absolute;
@@ -276,8 +414,18 @@ body, html{
     left: 0;
     /*margin: -250px 0 0 -250px;*/
     border-radius: 15px;
+    z-index: 0;
 }
 
+#camera-overlay{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: 200;
+}
 .anticipating:hover{
     box-shadow: 5px 5px 5px white;
     border: 1px white solid;
@@ -969,7 +1117,7 @@ body, html{
     height: 15px;
 }
 
-#overlay{
+#remote-overlay{
     width: 100%;
     height: 0;
     position: absolute;
@@ -1015,18 +1163,7 @@ body, html{
     cursor: pointer;
 }
 
-#add-store-item-to-cart-button{
-    position: absolute;
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    right: 5%;
-    bottom: 30%;
-    color: black;
-    background-color: white;
-    font-weight: 900;
-    text-align: center;
-}
+
 
 #close-profile-button:hover, #close-store-item-button:hover, #close-contact-form-button:hover{
     color: white;
@@ -1037,161 +1174,9 @@ body, html{
     outline: none;
 }
 
-#contact-form-email-input{
-    color: greenyellow;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 25px;
-    height: 25px;
-    width: 150px;
-    display: block;
-    margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-#contact-page-overlay-header{
-    width: 100%;
-    text-align: center;
-    color: white;
-    font-weight: 900;
-    height: 20%;
-    font-size: 1.3em;
-}
-
-#contact-form-message-input{
-    width: 80%;
-    height: 300px;
-    margin: 2% auto;
-    display: block;
-    border-radius: 10px;
-    border-radius: 2px white solid;
-    background-color: rgba(255, 255, 255, 0.3);
-    color: lawngreen;
-    font-weight: 400;
-}
-
-#contact-form-message-input:focus{
-    outline: none;
-}
-
-#contact-form-submit-button{
-    width: 75px;
-    height: 75px;
-    color: white;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-width: 0;
-    border-radius: 50%;
-    display: block;
-    margin: 5% auto;
-}
-
-#contact-form-submit-button:hover{
-    cursor: pointer;
-    font-weight: 900;
-    color: black;
-    background-color: rgba(255, 255, 255, 1.0);
-}
-
-#contact-form-submit-button:focus{
-    outline: none;
-}
-
-#contact-form-container{
-    font-family: monospace;
-    color: white;
-    width: 100%;
-    height: 60%;
-}
-
-#true-overlay{
-    width: 100%;
-    height: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: none;
-    z-index: 150;
-    background-color: black;
-    color: white;
-    font-family: monospace;
-    /*background-image: url('../media/img/bg/shop.gif');*/
-}
-
-#ready-label{
-    opacity: 0;
-    width: 100%;
-    height: 15px;
-    line-height: 15px;
-    text-align: center;
-    vertical-align: middle;
-    font-family: monospace;
-    text-transform: uppercase;
-}
-
-#wall{
-    display: none;
-}
-
 ::-webkit-scrollbar {
     width: 0.5em;
     height: 0.5em
-}
-
-#wall-header-container{
-    height: 75px;
-    width: 250px;
-    margin: 2% auto;
-}
-
-#social-media-link-container{
-    width: 90px;
-    position: absolute;
-    bottom: 20%;
-    right: 0;
-}
-
-.wall-option{
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: 2px white solid;
-    color: white;
-    line-height: 35px;
-    font-size: 0.8em;
-    text-align: center;
-    font-weight: bold;
-    font-style: italic;
-    background-color: black;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-.wall-option:focus{
-    outline: none;
-}
-
-.wall-option:hover{
-    border: 2px white solid;
-    color: black;
-    background-color: white;
-}
-
-#wall-title{
-    display: inline-block;
-    font-family: monospace;
-    font-size: 1.3em;
-    width: 100%;
-    height: 35px;
-    text-align: center;
-    text-align: center;
-    line-height: 35px;
-    vertical-align: top;
-    font-style: italic;
-    text-transform: uppercase;
-    color: black;
-    background-color: white;
-    border-radius: 15px;
 }
 
 #version-number{
