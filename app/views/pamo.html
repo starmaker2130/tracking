@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+    <title>p@mo | cARd by HOV | v 0.8.5</title>
+    <link rel='stylesheet' type='text/css' href='../css/rfid.css' />
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <script src='../js/aframe.min.js'></script>
+    <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
+    <script>
+        var sessionManager = {
+            cardContentsLoaded: false,
+            status: -1,
+            onPage: null,
+            pages: ['linkedin', 'call', 'pARk', 'visuals', 'instagram'],
+            addressBookVisible: false
+        };
+
+        function requestFullScreen(element) { //    makes the application fullscreen on fullscreen equipped browsers
+            var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen; // Supports most browsers and their versions.
+
+            if (requestMethod) { // Native full screen.
+                requestMethod.call(element);
+            } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+            }
+        }
+
+        function initializeSession(data){
+            sessionManager.cardContentsLoaded = true;
+            sessionManager.status = 0;
+            sessionManager.onPage = 'pARk';
+            
+            setTimeout(function(){
+                document.querySelector('#pARk-button').emit('bounce-pARk');
+            }, 6000);
+        }
+        
+        function gotDevices(deviceInfos) {
+            var videoSelect = document.querySelector('select#videoSource');
+            for (var i = 0; i !== deviceInfos.length; ++i) {
+                var deviceInfo = deviceInfos[i];
+                var option = document.createElement('option');
+                option.value = deviceInfo.deviceId;
+
+                if (deviceInfo.kind === 'videoinput') {
+                    option.text = deviceInfo.label || 'camera ' + (videoSelect.length + 1);
+                    videoSelect.appendChild(option);
+                }
+                else {
+                    console.log('Found one other kind of source/device: ', deviceInfo);
+                }
+            }
+        }
+
+        function getStream() {
+            var videoSelect = document.querySelector('select#videoSource');
+
+            if (window.stream) {
+                window.stream.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+            }
+
+            var constraints = {
+                video: {
+                    deviceId: {exact: videoSelect.value}
+                }
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch(handleError);
+        }
+        
+        function gotStream(stream) {
+            window.stream = stream; // make stream available to console
+            video.srcObject = stream;
+            //video.play();
+        }
+
+        function handleError(error) {
+            console.log('Error: ', error);
+        }
+        
+        $(document).ready(function(){
+            initializeSession();
+
+            // FIRST STAGE
+            $('#launch-application-page').click(function(){
+
+                console.log('application launch...');
+
+                var elem = document.body;
+                //requestFullScreen(elem);
+
+                $(this).animate({
+                    height: 0
+                }, 2500, function(){
+                    $('.option-button').show().animate({
+                        opacity: 1.0
+                    }, 1000);
+                    
+                    $(this).hide();
+                     var video = document.getElementById('video');
+                    var videoSelect = document.querySelector('select#videoSource');
+                    // Get access to the camera!
+                    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                        // Not adding `{ audio: true }` since we only want video now
+                        navigator.mediaDevices.enumerateDevices().then(gotDevices).then(getStream).catch(handleError);
+
+                        videoSelect.onchange = getStream;
+                    }
+                });
+            });
+            
+            $('#next-option-button').click(function(){
+                if(sessionManager.status==0&&sessionManager.onPage=='pARk'){
+                    sessionManager.status=0;
+                    //document.getElementById('pARk-animation').setAttribute('repeat', '0');
+                    document.querySelector(`#pARk-button`).emit(`kill-pARk`);
+                    document.querySelector(`#pARk-button`).emit(`deselect-pARk`);
+                }
+                else{
+                    if(sessionManager.status==sessionManager.pages.length-1){
+                        sessionManager.status=0;
+                      //  document.getElementById('instagram-animation').setAttribute('repeat', '0');
+                        document.querySelector(`#instagram-button`).emit(`kill-instagram`);
+                        document.querySelector(`#instagram-button`).emit(`deselect-instagram`);
+                    }
+                    else{
+                        sessionManager.status++;
+                    }
+                }
+                
+                if(sessionManager.status>0){
+                    var prev = sessionManager.pages[sessionManager.status-1];
+                    //document.getElementById(`${prev}-animation`).setAttribute('repeat', '0');    
+                    document.querySelector(`#${prev}-button`).emit(`kill-${prev}`);
+                    document.querySelector(`#${prev}-button`).emit(`deselect-${prev}`);
+                }
+
+                var page = sessionManager.pages[sessionManager.status];
+                sessionManager.onPage = page;
+                //document.getElementById(`${page}-animation`).setAttribute('repeat', 'indefinite');
+                if(sessionManager.addressBookVisible==true){
+                    document.querySelector('#contact-0').emit('hide-contact-0');
+                    document.querySelector('#contact-1').emit('hide-contact-1');
+                    document.querySelector('#contact-2').emit('hide-contact-2');
+                    sessionManager.addressBookVisible=false;
+                }
+                
+                document.querySelector(`#${page}-button`).emit(`select-${page}`);
+                document.querySelector(`#${page}-button`).emit(`bounce-${page}`);
+                console.log(`now on page ${page}`);
+                
+                switch(page){
+                    case 'linkedin':
+                        $('#left-content-panel').attr('value','LinkedIn Photo');
+                        $('#right-content-panel').attr('align', 'left');
+                        $('#right-content-panel').attr('value','CEO, Chairman @ House of Venus \n\n  UMD 2020 B.S. Mathematics \n\n current: \n democratizing the web \n with the power of network AR \n\n past: \n * startup shell \n * lab of cognition and emotion \n * subiaul lab');
+                        $('#cARd-ar-title').attr('value', 'Patrice-Morgan Ongoly');
+                        break;
+                    case 'call':
+                        $('#left-content-panel').attr('value','Call Profile Information');
+                        $('#cARd-ar-title').attr('value', 'CONTACTS');
+                        $('#right-content-panel').attr('align', 'left');                        
+                        $('#right-content-panel').attr('value','');
+                        document.querySelector('#contact-0').emit('show-contact-0');
+                        document.querySelector('#contact-1').emit('show-contact-1');
+                        document.querySelector('#contact-2').emit('show-contact-2');
+                        sessionManager.addressBookVisible = true;
+                        break;
+                    case 'pARk':
+                        $('#left-content-panel').attr('value','House of Venus \n\n cARd  \n\n version 0.8.24');
+                        $('#cARd-ar-title').attr('value', 'COLLEGE PARK');
+                        
+                        $('#right-content-panel').attr('value','Patrice-Morgan Ongoly\n\n CEO | House of Venus \n\n UMD 2020 Mathematics \n\n @ dmv | @ paris');
+                        break;
+                    case 'visuals':
+                        $('#left-content-panel').attr('value','Visuals Content');
+                        $('#cARd-ar-title').attr('value', 'VISUALS');
+                        $('#right-content-panel').attr('value', '');
+                        break;
+                    case 'instagram':
+                        $('#left-content-panel').attr('value','Instagram Content');
+                        $('#cARd-ar-title').attr('value', 'INSTAGRAM');
+                        $('#right-content-panel').attr('value', '');
+                        break;
+                    default:
+                        break;
+                }
+            });
+            
+            $('#prev-option-button').click(function(){
+                if(sessionManager.status==0&&sessionManager.onPage=='pARk'){
+                    sessionManager.status=sessionManager.pages.length-1;
+                    //document.getElementById('pARk-animation').setAttribute('repeat', '0');
+                    document.querySelector(`#pARk-button`).emit(`kill-pARk`);
+                    document.querySelector(`#pARk-button`).emit(`deselect-pARk`);
+                }
+                else{
+                    if(sessionManager.status==0){
+                        sessionManager.status=sessionManager.pages.length-1;
+                      //  document.getElementById('instagram-animation').setAttribute('repeat', '0');
+                        document.querySelector(`#linkedin-button`).emit(`kill-linkedin`);
+                        document.querySelector(`#linkedin-button`).emit(`deselect-linkedin`);
+                    }
+                    else{
+                        sessionManager.status--;
+                    }
+                }
+                
+                if(sessionManager.status<sessionManager.pages.length-1){
+                    var prev = sessionManager.pages[sessionManager.status+1];
+                    //document.getElementById(`${prev}-animation`).setAttribute('repeat', '0');    
+                    document.querySelector(`#${prev}-button`).emit(`kill-${prev}`);
+                    document.querySelector(`#${prev}-button`).emit(`deselect-${prev}`);
+                }
+
+                var page = sessionManager.pages[sessionManager.status];
+                sessionManager.onPage = page;
+                //document.getElementById(`${page}-animation`).setAttribute('repeat', 'indefinite');
+                
+                if(sessionManager.addressBookVisible==true){
+                    document.querySelector('#contact-0').emit('hide-contact-0');
+                    document.querySelector('#contact-1').emit('hide-contact-1');
+                    document.querySelector('#contact-2').emit('hide-contact-2');
+                    sessionManager.addressBookVisible=false;
+                }
+                
+                document.querySelector(`#${page}-button`).emit(`select-${page}`);
+                document.querySelector(`#${page}-button`).emit(`bounce-${page}`);
+                console.log(`now on page ${page}`);
+                
+                switch(page){
+                    case 'linkedin':
+                        $('#left-content-panel').attr('value','LinkedIn Photo');
+                        $('#right-content-panel').attr('align', 'left');
+                        $('#right-content-panel').attr('value','CEO, Chairman @ House of Venus \n\n  UMD 2020 B.S. Mathematics \n\n current: \n democratizing the web \n with the power of network AR \n\n past: \n * startup shell \n * lab of cognition and emotion \n * subiaul lab');
+                        $('#cARd-ar-title').attr('value', 'Patrice-Morgan Ongoly');
+                        break;
+                    case 'call':
+                        $('#left-content-panel').attr('value','Call Profile Information');
+                        $('#cARd-ar-title').attr('value', 'CONTACTS');
+                        $('#right-content-panel').attr('align', 'left');
+                        $('#right-content-panel').attr('value','');
+                        document.querySelector('#contact-0').emit('show-contact-0');
+                        document.querySelector('#contact-1').emit('show-contact-1');
+                        document.querySelector('#contact-2').emit('show-contact-2');
+                        sessionManager.addressBookVisible = true;
+                        break;
+                    case 'pARk':
+                        $('#left-content-panel').attr('value','House of Venus \n\n cARd  \n\n version 0.8.24');
+                        $('#cARd-ar-title').attr('value', 'COLLEGE PARK');
+                        
+                        $('#right-content-panel').attr('value','Patrice-Morgan Ongoly\n\n CEO | House of Venus \n\n UMD 2020 Mathematics \n\n @ dmv | @ paris');
+                        break;
+                    case 'visuals':
+                        $('#left-content-panel').attr('value','Visuals Content');
+                        $('#cARd-ar-title').attr('value', 'VISUALS');
+                        $('#right-content-panel').attr('value', '');
+                        break;
+                    case 'instagram':
+                        $('#left-content-panel').attr('value','Instagram Content');
+                        $('#cARd-ar-title').attr('value', 'INSTAGRAM');
+                        $('#right-content-panel').attr('value', '');
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id='launch-application-page' class='entry-layer overlay'>
+        <div id='instructions'>
+            tap anywhere
+            <div id='logo'></div>
+            to view cARd
+        </div>
+    </div>
+    <!-- FOR PRODUCTION PURPOSES ONLY-->
+    <select id='videoSource'></select>
+    <input id='select-option-button' class='option-button' type='button' value='o' />
+    <input id='prev-option-button' class='option-button' type='button' value='<' />
+    <input id='next-option-button' class='option-button' type='button' value='>' />
+    
+    <video id="video" autoplay></video>
+    <div id='main-app-container' class='viewer-layer'>
+        <a-scene embedded id='rfid-experience-container'>
+            <a-assets>
+                <a-asset-item id='pamo-model' src='../media/model/nelson.obj'></a-asset-item>
+                <img id='floor-texture' src='../media/texture/grid_pattern.png' preload='true' />
+                <img id='earth-texture' src='../media/texture/earthmap1k.jpg' preload='true' />
+                
+                <img id='linkedin-texture' src='../media/texture/linkedin-texture.png'/>
+                <img id='call-texture' src='../media/texture/call-texture.png'/>
+                <img id='pARk-texture' src='../media/texture/globe-texture.png'/>
+                <img id='visuals-texture' src='../media/texture/visuals-texture.png'/>
+                <img id='instagram-texture' src='../media/texture/instagram-texture.png'/>
+            </a-assets>
+            
+            
+            
+            <a-text value='13:45' position='0 5.3 -4' align='center' material='color: white;' font='monoid' width='10'></a-text>
+            <a-text id='cARd-ar-title' value='Patrice-Morgan Ongoly' position='0 6 -4' align='center' material='color: white;' font='monoid' width='16'></a-text>
+            
+            <a-obj-model src='#pamo-model' position='0 2.5 -4' scale='5 5 5' rotation='-90 0 0'></a-obj-model>
+            
+            <!--<a-sphere material='src: #earth-texture;' position="0 1.attribute='radius'              <!--<a-animation attribute='rotation' easing='linear' dur='10000' from='23 0 0' to='23 360 0' repeat='indefinite'></a-animation>-->
+            <!--</a-sphere>-->
+                    
+            <a-sphere id='linkedin-button' material='src: #linkedin-texture;' position="-6 0 -4" rotation='0 -45 0' radius="0.75">
+                <a-animation attribute='radius' easing='ease-out' delay='5000' dur='2000' from='0.75' to='0.5' ></a-animation>
+                
+                <a-animation id='linkedin-highlight' attribute='radius' easing='ease-out' dur='1000' from='0.5' to='1' begin='select-linkedin'></a-animation>
+                
+                <a-animation id='linkedin-shrink' attribute='radius' easing='ease-out' dur='1000' from='1' to='0.5' begin='deselect-linkedin'></a-animation>
+                
+                <a-animation id='linkedin-animation' attribute='position' begin='bounce-linkedin' end='kill-linkedin' dur='1000' direction='alternate' from='-6 0 -4' to='-6 0.5 -4' repeat='indefinite' ></a-animation>
+            </a-sphere>
+            <a-text value='LinkedIn' position='-6 0 -3' align='center' material='color: white;' font='monoid' width='10'></a-text>
+            
+            
+            <a-sphere id='call-button'  material='src: #call-texture;' position="-3 0 -3" rotation='0 -45 0'radius="0.75">
+                <a-animation attribute='radius' easing='ease-out' delay='5000' dur='2000' from='0.75' to='0.5' ></a-animation>
+                
+                <a-animation id='call-highlight' attribute='radius' easing='ease-out' dur='1000' from='0.5' to='1' begin='select-call'></a-animation>
+                
+                <a-animation id='call-shrink' attribute='radius' easing='ease-out' dur='1000' from='1' to='0.5' begin='deselect-call'></a-animation>
+                
+                <a-animation id='call-animation' attribute='position' begin='bounce-call' end='kill-call' dur='1000' direction='alternate' from='-3 0 -3' to='-3 0.5 -3' repeat='indefinite' ></a-animation>
+            </a-sphere>
+            <a-text value='Call' position='-3 0 -2' align='center' material='color: white;' font='monoid' width='10'></a-text>         
+            
+            <a-sphere id='pARk-button' material='src: #pARk-texture; color: white;' position="0 0 -2" rotation='0 -90 0' radius="0.75">
+                <a-animation attribute='radius' easing='ease-out' delay='5000' dur='2000' from='0.75' to='1.0' ></a-animation>
+                
+                <a-animation id='pARk-highlight' attribute='radius' easing='ease-out' dur='1000' from='0.5' to='1' begin='select-pARk'></a-animation>
+                
+                <a-animation id='pARk-shrink' attribute='radius' easing='ease-out' dur='1000' from='1' to='0.5' begin='deselect-pARk'></a-animation>
+                
+                <a-animation id='pARk-animation' attribute='position' begin='bounce-pARk' end='kill-pARk' dur='1000' direction='alternate' from='0 0 -2' to='0 0.5 -2' repeat='indefinite' ></a-animation>
+            </a-sphere>
+            <a-text value='pARk' position='0 0 -1' align='center' material='color: white;' font='monoid' width='10'></a-text>
+            
+            
+            <a-sphere id='visuals-button' material='src: #visuals-texture;' position="3 0 -3" rotation='0 -90 0' radius="0.75">
+                <a-animation attribute='radius' easing='ease-out' delay='5000' dur='2000' from='0.75' to='0.5' ></a-animation>
+                
+                <a-animation id='visuals-highlight' attribute='radius' easing='ease-out' dur='1000' from='0.5' to='1' begin='select-visuals'></a-animation>
+                
+                <a-animation id='visuals-shrink' attribute='radius' easing='ease-out' dur='1000' from='1' to='0.5' begin='deselect-visuals'></a-animation>
+                
+                <a-animation id='visuals-animation' attribute='position' begin='bounce-visuals' end='kill-visuals' dur='1000' direction='alternate' from='3 0 -3' to='3 0.5 -3' repeat='indefinite' ></a-animation>
+            </a-sphere>
+            <a-text value='visuals' position='3 0 -2' align='center' material='color: white;' font='monoid' width='10'></a-text>
+            
+            <a-sphere id='instagram-button' material='src: #instagram-texture;' position="6 0 -4" rotation='0 -90 0' radius="0.75">
+                <a-animation attribute='radius' easing='ease-out' delay='5000' dur='2000' from='0.75' to='0.5' ></a-animation>
+                
+                <a-animation id='instagram-highlight' attribute='radius' easing='ease-out' dur='1000' from='0.5' to='1' begin='select-instagram'></a-animation>
+                
+                <a-animation id='instagram-shrink' attribute='radius' easing='ease-out' dur='1000' from='1' to='0.5' begin='deselect-instagram'></a-animation>
+                
+                <a-animation id='instagram-animation' attribute='position' begin='bounce-instagram' end='kill-instagram' dur='1000' direction='alternate' from='6 0 -4' to='6 0.5 -4' repeat='indefinite' ></a-animation>
+            </a-sphere>
+            <a-text value='Instagram' position='6 0 -3' align='center' material='color: white;' font='monoid' width='10'></a-text>
+            
+            <a-text id='left-content-panel' geometry='primitive: plane; width: 3; height: 3;' position='-4 3 -3' rotation='0 45 0' value='House of Venus \n\n cARd  \n\n version 0.8.24' width='6' align='center' color='white' material='transparent: true; opacity: 0;'></a-text>
+            
+            <a-text id='contact-0' value='Vaibhav Ponnuri' width='8' align='center'  position='5 4 -4' rotation='0 -35 0' geometry='primitive: plane; width: 4; height: 1;' color='white' material='color: red; side: double;' visible='false'>
+                <a-animation attribute='visible' begin='show-contact-0' dur='1000' to='true'></a-animation>
+                
+                <a-animation attribute='visible' begin='hide-contact-0' dur='1000' to='false'></a-animation>
+            </a-text>
+            <a-text id='contact-1' value='Beatrice Goma' width='8' align='center' position='5 3 -4' rotation='0 -35 0' geometry='primitive: plane; width: 4; height: 1;' color='white' material='color: green; side: double;' visible='false'>
+                <a-animation attribute='visible' begin='show-contact-1' dur='1000' to='true'></a-animation>
+                
+                <a-animation attribute='visible' begin='hide-contact-1' dur='1000' to='false'></a-animation>
+            </a-text>
+            <a-text id='contact-2' value='Emily Sprague' width='8' align='center' position='5 2 -4' rotation='0 -35 0' geometry='primitive: plane; width: 4; height: 1;' color='white' material='color: blue; side: double;' visible='false'>
+                <a-animation attribute='visible' begin='show-contact-2' dur='1000' to='true'></a-animation>
+                
+                <a-animation attribute='visible' begin='hide-contact-2' dur='1000' to='false'></a-animation>
+            </a-text>
+            
+            <a-text id='right-content-panel' geometry='primitive: plane; width: 3; height: 3;' position='4 3 -4' rotation='0 -35 0' value='CEO, Chairman \n\n House of Venus, BC \n\n UMD 2020 Mathematics \n\n @ dmv | @ paris' width='6' align='center' color='white' material='transparent: true; opacity: 0;'></a-text>
+            <!--<a-entity id='floor'
+                        geometry='primitive: plane; width: 100; height: 100;'
+                        material='src: #floor-texture; repeat: 100 100;'
+                        position='0 0 0'
+                        rotation='-90 0 0'>
+            </a-entity>-->
+            <a-entity position="0 3 3">            
+                <a-entity camera="active: true" look-controls wasd-controls></a-entity>
+            </a-entity>
+            <a-sky material='transparent: true; opacity: 0; color: white;'>
+            </a-sky>
+        </a-scene>
+    </div>
+</body>
+</html>

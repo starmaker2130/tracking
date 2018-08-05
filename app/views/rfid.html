@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <title>cARd</title>
+    <style>
+        hov-rfid{
+            
+        }
+    </style>
+    <script>
+        
+        var RFIDPrototype = Object.create(HTMLElement.prototype);
+        
+        RFIDPrototype.render = function(target){
+            var self = this;
+            self.author = self.getAttribute('author');
+            self.storageCapacity = self.getAttribute('storageCapacity');
+            self.version = self.getAttribute('version');
+            self.mavEnabled = self.getAttribute('mavEnable');
+            self.mavType = self.getAttribute('mavType');
+            self.mavSrc = self.getAttribute('mavSrc')
+            //var id = self.getAttribute('id');
+            switch(target){
+                case 0: // standard gui
+                    var author = document.createElement('h2').appendChild(document.createTextNode(self.author));
+                    var storage = document.createElement('div').appendChild(document.createTextNode(self.storageCapacity));
+                    var version = document.createElement('div').appendChild(document.createTextNode(self.version));
+                    var mavEnabled = document.createElement('div').appendChild(document.createTextNode(self.mavEnabled));
+                    var mavType = document.createElement('div').appendChild(document.createTextNode(self.mavType));
+                    var mavSrc = document.createElement('div').appendChild(document.createTextNode(self.mavSrc));
+
+                    self.appendChild(author);
+                    self.appendChild(storage);
+                    self.appendChild(version);
+                    self.appendChild(mavEnabled);
+                    self.appendChild(mavType);
+                    self.appendChild(mavSrc);
+                    
+                    break;
+                case 1: // ar gui
+                    break;
+                case 2: // vr gui
+                    break;
+                case 3: // mr gui
+                    break;
+                default:
+                    break;
+            }
+        };
+        
+        Object.defineProperty(RFIDPrototype, 'author', {
+            value: null,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'embedded', {
+            value: {
+                core: true,
+                target: 'cARd'
+            },
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'storageCapacity', {
+            value: 512,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'version', {
+            value: null,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'mavEnabled', {
+            value: false,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'mavType', {
+            value: -1,
+            writable: true
+        });
+        
+        Object.defineProperty(RFIDPrototype, 'mavSrc', {
+            value: '',
+            writable: true
+        });
+        
+        var RFIDElement = document.registerElement('my-rfid', {
+            prototype: RFIDPrototype
+        });
+        
+        $(document).ready(function(){
+            var myRFID = document.getElementById('rfid');
+            
+            console.log(myRFID);
+            myRFID.render(0);
+//            RFIDElement.render(0);
+        });
+    </script>
+</head>
+<body>
+    <hov-rfid id='rfid' author='patrice-morgan' storageCapacity='1024' version='0.1.0' mavEnabled='true' mavType='0' mavSrc='../touch.html'>>
+    
+    </hov-rfid>
+    <div id='main-app-container' class='viewer-layer'>
+        <a-scene embedded id='rfid-experience-container'>
+            <a-assets>
+                <img id='floor-texture' src='../media/texture/grid_pattern.png' preload='true' />
+                <img id='earth-texture' src='../media/texture/earthmap1k.jpg' preload='true' />
+            </a-assets>
+            
+            
+            <a-text value='13:45' position='0 4 0' align='center' material='color: white;' font='monoid' width='10'></a-text>
+            <a-text value='COLLEGE PARK' position='0 3.3 0' align='center' material='color: white;' font='monoid' width='6'></a-text>
+            
+            <a-sphere material='src: #earth-texture;' position="0 1.5 -2" radius="2">
+                <a-animation attribute='rotation' easing='linear' dur='10000' from='23 0 0' to='23 360 0' repeat='indefinite'></a-animation>
+            </a-sphere>
+                    
+            <a-sphere color="white" position="3 2 -2" radius="0.5">
+            </a-sphere>
+            
+            <a-entity geometry='primitive: plane; width: 1.5; height: 0.5;' position='-2 0 0' text='value: new; width: 4; align: center; color: white;' material='color: black;'></a-entity>
+            
+            <a-entity geometry='primitive: plane; width: 1.5; height: 0.5;' position='2 0 0'  text='value: info; width: 4; align: center; color: white;' material='color: black;'></a-entity>
+            <!--<a-entity id='floor'
+                        geometry='primitive: plane; width: 100; height: 100;'
+                        material='src: #floor-texture; repeat: 100 100;'
+                        position='0 0 0'
+                        rotation='-90 0 0'>
+            </a-entity>-->
+            <a-entity position="0 1.5 5">            
+                <a-entity camera="active: true" look-controls wasd-controls></a-entity>
+            </a-entity>
+            <a-sky material='transparent: true; opacity: 0; color: white;'>
+            </a-sky>
+        </a-scene>
+    </div>
+</body>    
+</html>

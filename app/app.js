@@ -60,6 +60,10 @@ app.get('/rfid', function(req, res){
     res.render('empty-rfid.html',{root: dir[0]});
 });
 
+app.get('/pamo', function(req, res){
+    res.render('pamo.html',{root: dir[0]});
+});
+
 app.get('/postAR', function(req, res){
     res.render('postAR.html',{root: dir[0]});
 });
