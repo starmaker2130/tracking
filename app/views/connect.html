@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src='../js/socket.io.js'></script>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <script>
+        $(document).ready(function(){
+            var conn = io.connect(location.host);
+            setTimeout(function(){
+                conn.emit('checkDeviceType', {status: 1});
+            }, 100);
+            
+            conn.on('loadDeviceType', function(data){
+                var type = data.type;
+                if(type=='desktop'){
+                    console.log('TODO: (1) reveal desktop anchor (2) you are using a desktop computer...to properly view tis site keep this window open, go to houseofven.us/key and enter the @address, once your camera is open hover over this screen');
+                }
+                else if(type=='mobile'){
+                    console.log('TODO: load the corresponding house of venus remote');
+                }
+            })
+        });
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

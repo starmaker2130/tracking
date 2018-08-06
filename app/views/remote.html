@@ -196,7 +196,13 @@
         document.addEventListener('DOMContentLoaded', function(){
             sessionManager.socket = io.connect(location.host);
             sessionManager.socket.emit('identify', {
-                page: 0
+                manufacturer: 'House of Venus, Benefit Corporation',
+                author: 'Patrice-Morgan Ongoly',
+                source: {
+                    device: 'rfid',
+                    product: 'cARd',
+                    tapin: new Date().getTime()
+                }
             });
             
             startupSiteUI();

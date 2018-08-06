@@ -9,6 +9,7 @@ var express = require('express');
 var formidable = require('formidable');
 var util = require('util');
 var fs = require('fs');
+var WhichBrowser = require('which-browser');
 // main application instance
 
 var app = express();
@@ -53,7 +54,24 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static('/'));
 
 app.get('/', function(req, res){
-    res.render('board.html',{root: dir[0]});
+    res.render('dmv.html',{root: dir[0]});
+});
+
+var deviceType = 'unknown';
+
+app.get('/connect', function(req, res){
+    var result = new WhichBrowser(req.headers);
+    console.log(result.toString());
+    if(result.isType('desktop')){
+        console.log('This is a desktop computer.');
+        deviceType = 'desktop';
+    }
+    else{
+        console.log('This is a mobile device.');
+        deviceType = 'mobile';
+    }
+    
+    res.render('connect.html',{root: dir[0]});
 });
 
 app.get('/remote', function(req, res){
@@ -349,6 +367,10 @@ var guests = [
 io.sockets.on('connection', function(socket){
     console.log('client connected.');
     var conn = socket;
+    
+    socket.on('checkDeviceType', function(data){
+        socket.emit('loadDeviceType', {type: deviceType});
+    });
     
     socket.on('identify', function(data){
         console.log('configurind id...');
