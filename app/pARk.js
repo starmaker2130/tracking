@@ -53,13 +53,9 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use(express.static('/'));
 
-app.get('/', function(req, res){
-    res.render('dmv.html',{root: dir[0]});
-});
-
 var deviceType = 'unknown';
 
-app.get('/connect', function(req, res){
+app.get('/', function(req, res){
     var result = new WhichBrowser(req.headers);
     console.log(result.toString());
     if(result.isType('desktop')){
@@ -74,44 +70,16 @@ app.get('/connect', function(req, res){
     res.render('connect.html',{root: dir[0]});
 });
 
+app.get('/pARk', function(req, res){
+    res.render('dmv.html',{root: dir[0]});
+});
+
 app.get('/remote', function(req, res){
     res.render('remote.html',{root: dir[0]});
 });
 
 app.get('/cARd', function(req, res){
     res.render('cARd.html',{root: dir[0]});
-});
-
-app.post('/upload', function(req, res){
-
-    // create an incoming form object
-    var form = new formidable.IncomingForm();
-
-      // specify that we want to allow the user to upload multiple files in a single request
-    form.multiples = true;
-
-
-    form.on('fileBegin', function (name, file){
-        file.path = __dirname + '/uploads/' + file.name;
-    });
-
-    form.on('file', function (name, file){
-        console.log('uploaded ' + file.name);
-       // console.log('TODO: initiate server side reaction');
-    });
-
-      // log any errors that occur
-    form.on('error', function(err) {
-        console.log('An error has occured: \n' + err);
-    });
-
-      // once all the files have been uploaded, send a response to the client
-    form.on('end', function() {
-        res.end('success');
-    });
-
-      // parse the incoming request containing the form data
-    form.parse(req);
 });
 
 app.get('/css/remote.css', function(req, res){

@@ -11,23 +11,45 @@
             opacity: 0.2;
         }
         
+        #app-header-container{
+            position: absolute;
+            font-weight: 400;
+            display: block;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            font-style: italic;
+            font-family: monospace;
+            font-size: 1.3em;
+        }
+        
         .instruction{
             margin-top: 2%;
+        }
+        
+        #pARk-selector:focus{
+            outline: none;
         }
         
         #pARk-selector{
             position: absolute;
             font-family: monospace;
             font-size: 1.3em;
-            width: 100px;
+            width: 150px;
             height: 30px;
             display: block;
             bottom: 5%;
             left: 50%;
-            margin-left: -50px;
+            margin-left: -75px;
             text-align: center;
+            text-align-last: center;
         }
         
+        .pARk-location{
+            text-align: center;
+        }
         .station-marker{
             opacity: 0;
             cursor: pointer;
@@ -35,11 +57,11 @@
         
         #main-app-container{
             width: 650px;
-            height: 500px;
+            height: 600px;
             position: absolute;
             top: 50%;
             left: 50%;
-            margin: -250px 0 0 -325px;
+            margin: -325px 0 0 -325px;
         }
         
         #explore-button:focus{
@@ -79,10 +101,10 @@
         #mission-container{
             width: 80%;
             margin: 2% auto;
-            font-size: 1.1em;
+            font-size: 1.0em;
         }
         
-        #pARk-address, #station-title{
+        #pARk-address{
             text-align: center;
             height: 30px;
             line-height: 30px;
@@ -90,17 +112,22 @@
         
         #station-title{
             font-size: 1.5em;
+            width: 80%;
+            text-align: center;
+            height: 50px;
+            line-height: 25px;
+            margin: 0 auto;
         }
         
         #details-footer-container{
             opacity: 0;
             display: none;
             width: 200px;
-            height: 50px;
+            height: 35px;
             position: absolute;
             bottom: 25px;
             left: 50%;
-            line-height: 50px;
+            line-height: 35px;
             margin-left: -100px;
         }
         
@@ -137,7 +164,7 @@
                 },
                 url: '@branchave',
                 fillColor: 'white',
-                mission: 'an island-platformed Washington Metro station in Suitland, Maryland, United States.'
+                mission: ' station in Suitland, Maryland, United States.'
             },
             'Suitland': {
                 name: 'Suitland',
@@ -148,7 +175,7 @@
                 },
                 url: '@suitland',
                 fillColor: 'white',
-                mission: 'an island-platformed Washington Metro station in Suitland, Maryland, United States.'
+                mission: ' station in Suitland, Maryland, United States.'
             },
             'Naylor Rd': {
                 name: 'Naylor Rd',
@@ -159,7 +186,7 @@
                 },
                 url: '@naylor',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in Hillcrest Heights, Maryland, United States.'
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
             },
             'Southern Ave': {
                 name: 'Southern Ave',
@@ -170,7 +197,7 @@
                 },
                 url: '@southernave',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in Hillcrest Heights, Maryland, United States.'
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
             },
             'Congress Heights': {
                 name: 'Congress Heights',
@@ -181,7 +208,7 @@
                 },
                 url: '@congressheights',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in the Congress Heights neighborhood of Washington, D.C.'
+                mission: ' station in the Congress Heights neighborhood of Washington, D.C.'
             },
             'Anacostia': {
                 name: 'Anacostia',
@@ -192,7 +219,7 @@
                 },
                 url: '@anacostia',
                 fillColor: 'white',
-                mission: 'located in the Anacostia neighborhood of Southeast Washington, with entrances at Shannon Place and Howard Road near Martin Luther King, Jr. Avenue SE'
+                mission: 'located in the Anacostia neighborhood of Southeast Washington'
             },
             'Navy Yard-Ballpark': {
                 name: 'Navy Yard-Ballpark',
@@ -203,7 +230,7 @@
                 },
                 url: '@navyyard',
                 fillColor: 'white',
-                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast'
             },
             'Waterfront': {
                 name: 'Waterfront',
@@ -214,7 +241,7 @@
                 },
                 url: '@waterfront',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+                mission: 'the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             },
             'L Enfant Plaza': {
                 name: 'L Enfant Plaza',
@@ -225,7 +252,7 @@
                 },
                 url: '@lenfant',
                 fillColor: 'white',
-                mission: 'major transfer hub serving five out of the system\'s six lines, the most lines out of any station in the system; only the Red Line does not serve the station.'
+                mission: 'major transfer hub serving five out of the system\'s six lines'
             },
             'Archives': {
                 name: 'Archives',
@@ -236,7 +263,7 @@
                 },
                 url: '@archives',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in Washington, D.C. on the Green and Yellow Lines.'
+                mission: ' station in Washington, D.C. on the Green and Yellow Lines.'
             },
             'Gallery Place': {
                 name: 'Gallery Place',
@@ -247,7 +274,7 @@
                 },
                 url: '@galleryplace',
                 fillColor: 'white',
-                mission: 'a transfer station between the Red Line on the upper level and the Green/Yellow Lines on the lower level.'
+                mission: 'a transfer station between the Red Line and the Green/Yellow Lines'
             },
             'Mt Vernon Sq/7th St-Convention Center': {
                 name: 'Mt Vernon Sq/7th St-Convention Center',
@@ -258,7 +285,7 @@
                 },
                 url: '@mtvernon',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in Washington, D.C., on the Green and Yellow Lines. '
+                mission: ' station in Washington, D.C., on the Green and Yellow Lines. '
             },
             'Shaw-Howard U': {
                 name: 'Shaw-Howard U',
@@ -280,7 +307,7 @@
                 },
                 url: '@ustreet',
                 fillColor: 'white',
-                mission: ' a rapid transit station on the Green and Yellow Lines of the Washington Metro in Washington, D.C.'
+                mission: ' Green and Yellow Lines of the Washington Metro in Washington, D.C.'
             },
             'Columbia Heights': {
                 name: 'Columbia Heights',
@@ -291,7 +318,7 @@
                 },
                 url: '@columbiaheights',
                 fillColor: 'white',
-                mission: 'one of the busiest Metro stops outside the downtown core, with over four million exits in 2010.'
+                mission: 'one of the busiest Metro stops outside the downtown core'
             },
             'Georgia Ave-Pentworth': {
                 name: 'Georgia Ave-Pentworth',
@@ -302,7 +329,7 @@
                 },
                 url: '@georgiaave',
                 fillColor: 'white',
-                mission: 'located at the border of the neighborhoods of Petworth, Sixteenth Street Heights, and Park View in Northwest.'
+                mission: 'crossroads of Petworth, Sixteenth Street Heights, and Park View in Northwest.'
             },
             'Fort Totten': {
                 name: 'Fort Totten',
@@ -313,7 +340,7 @@
                 },
                 url: '@forttotten',
                 fillColor: 'white',
-                mission: 'last station on the Green Line in the District of Columbia before heading into Maryland that acts as a transfer point between the Green/Yellow and Red Lines'
+                mission: 'last station on the Green Line in the District of Columbia before Maryland '
             },
             'West Hyattsville': {
                 name: 'West Hyattsville',
@@ -324,7 +351,7 @@
                 },
                 url: '@hyattsville',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in Hyattsville, Maryland on the Green Line. It is the first station in Maryland going northeast on the Green Line.'
+                mission: ' station in Hyattsville, Maryland'
             },
             'Prince Georges Plaza': {
                 name: 'Prince Georges Plaza',
@@ -335,7 +362,7 @@
                 },
                 url: '@pgplaza',
                 fillColor: 'white',
-                mission: 'Prince Georges Plaza is a Washington Metro station in Hyattsville, Maryland, on the Green Line.'
+                mission: 'Prince Georges Plaza'
             },
             'College Park-U of Md': {
                 name: 'College Park-U of Md',
@@ -346,7 +373,7 @@
                 },
                 url: '@cp',
                 fillColor: 'green',
-                mission: 'home of the terrapins'
+                mission: `<div style='cursor: pointer; width: 50px; height: 50px; background-image: url("../media/img/hov.png"); background-size: 100% 100%; background-repeat: no-repeat; margin: 1% auto; border-radius: 50%; display: inline-block; border: 2px black solid;'></div> <div style='cursor: pointer; width: 50px; height: 50px; background-image: url("../media/img/shell.png"); background-size: 100% 100%; background-repeat: no-repeat; margin: 1% auto; border-radius: 50%; display: inline-block; border: 2px red solid;'></div>`
             },
             'Greenbelt': {
                 name: 'Greenbelt',
@@ -357,7 +384,7 @@
                 },
                 url: '@greenbelt',
                 fillColor: 'white',
-                mission: 'Greenbelt is a Washington Metro and MARC station in Prince George\'s County, Maryland on the Green Line. It is the northeastern end of the Green Line.'
+                mission: 'MARC station and terminus of Metro Green Line'
             }
         };
 
@@ -371,7 +398,7 @@
                 },
                 url: '@huntington',
                 fillColor: 'white',
-                mission: 'an island-platformed Washington Metro station in Suitland, Maryland, United States.'
+                mission: ' station in Suitland, Maryland, United States.'
             },
             'Eisenhower Ave': {
                 name: 'Eisenhower Ave',
@@ -382,7 +409,7 @@
                 },
                 url: '@eisenhower',
                 fillColor: 'white',
-                mission: 'an island-platformed Washington Metro station in Suitland, Maryland, United States.'
+                mission: ' station in Suitland, Maryland, United States.'
             },
             'King St-Old Town': {
                 name: 'King St-Old Town',
@@ -393,7 +420,7 @@
                 },
                 url: '@kingstoldtown',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in Hillcrest Heights, Maryland, United States.'
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
             },
             'Braddock Rd': {
                 name: 'Braddock Rd',
@@ -404,7 +431,7 @@
                 },
                 url: '@braddockrd',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in Hillcrest Heights, Maryland, United States.'
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
             },
             'Ronald Reagan Washington National Airport': {
                 name: 'Ronald Reagan Washington National Airport',
@@ -448,7 +475,7 @@
                 },
                 url: '@pentagon',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             }
         };
         
@@ -457,8 +484,8 @@
                 name: 'Franconia-Springfield',
                 id: 'franconia-springfield-station',
                 position: {
-                    x: 5,
-                    y: 5
+                    x: 150,
+                    y: 520
                 },
                 url: '@',
                 fillColor: 'white',
@@ -468,8 +495,8 @@
                 name: 'Van Dorn',
                 id: 'van-dorn-station',
                 position: {
-                    x: 5,
-                    y: 5
+                    x: 175,
+                    y: 480
                 },
                 url: '@',
                 fillColor: 'white',
@@ -675,240 +702,489 @@
             },
         };
         
-        
         var orangeLineStations = {
-            'Branch Ave': {
-                name: 'Branch Ave',
-                id: 'branch-ave-station',
+            'Vienna/ Fairfax-GMU': {
+                name: 'Vienna/ Fairfax-GMU',
+                id: 'vienna-gmu-station',
                 position: {
-                    x: 580,
-                    y: 450
+                    x: 15,
+                    y: 230
                 },
-                url: '@branchave',
+                url: '@gmu',
                 fillColor: 'white',
-                mission: 'an island-platformed Washington Metro station in Suitland, Maryland, United States.'
+                mission: ' station in Suitland, Maryland, United States.'
             },
-            'Suitland': {
-                name: 'Suitland',
-                id: 'suitland-station',
+            'Dunn Loring/ Merrifeld': {
+                name: 'Dunn Loring/ Merrifeld',
+                id: 'dunn-loring-merrifeld-station',
                 position: {
-                    x: 555,
-                    y: 425
+                    x: 35,
+                    y: 230
                 },
-                url: '@suitland',
+                url: '@dunnloring',
                 fillColor: 'white',
-                mission: 'an island-platformed Washington Metro station in Suitland, Maryland, United States.'
+                mission: ' station in Suitland, Maryland, United States.'
             },
-            'Naylor Rd': {
-                name: 'Naylor Rd',
-                id: 'naylor-rd-station',
+            'West Falls Church/ VT-UVA': {
+                name: 'West Falls Church/ VT-UVA',
+                id: 'west-falls-vt-uva-station',
                 position: {
-                    x: 530,
-                    y: 400
+                    x: 55,
+                    y: 230
                 },
-                url: '@naylor',
+                url: '@westfallschurch',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in Hillcrest Heights, Maryland, United States.'
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
             },
-            'Southern Ave': {
-                name: 'Southern Ave',
-                id: 'southern-ave-station',
+            'East Falls Church': {
+                name: 'East Falls Church',
+                id: 'east-falls-church-station',
                 position: {
-                    x: 500,
-                    y: 405
+                    x: 75,
+                    y: 230
                 },
-                url: '@southernave',
+                url: '@eastfallschurch',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in Hillcrest Heights, Maryland, United States.'
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
             },
-            'Congress Heights': {
-                name: 'Congress Heights',
-                id: 'congress-heights-station',
+            'Ballston-MU': {
+                name: 'Ballston-MU',
+                id: 'ballston-mu-station',
                 position: {
-                    x: 470,
-                    y: 380
+                    x: 95,
+                    y: 230
                 },
-                url: '@congressheights',
+                url: '@ballston',
                 fillColor: 'white',
-                mission: 'an island platformed Washington Metro station in the Congress Heights neighborhood of Washington, D.C.'
+                mission: ' station in the Congress Heights neighborhood of Washington, D.C.'
             },
-            'Anacostia': {
-                name: 'Anacostia',
-                id: 'anacostia-station',
+            'Virginia Sq-GMU': {
+                name: 'Virginia Sq-GMU',
+                id: 'virginia-square-gmu-station',
                 position: {
-                    x: 450,
-                    y: 360
+                    x: 115,
+                    y: 230
                 },
-                url: '@anacostia',
+                url: '@gmu',
                 fillColor: 'white',
                 mission: 'located in the Anacostia neighborhood of Southeast Washington, with entrances at Shannon Place and Howard Road near Martin Luther King, Jr. Avenue SE'
             },
-            'Navy Yard-Ballpark': {
-                name: 'Navy Yard-Ballpark',
-                id: 'navy-yard-ballpark-station',
+            'Clarendon': {
+                name: 'Clarendon',
+                id: 'clarendon-station',
                 position: {
-                    x: 410,
-                    y: 340
+                    x: 135,
+                    y: 230
                 },
                 url: '@navyyard',
                 fillColor: 'white',
                 mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
             },
-            'Waterfront': {
-                name: 'Waterfront',
-                id: 'waterfront-station',
+            'Court House': {
+                name: 'Court House',
+                id: 'court-house-station',
                 position: {
-                    x: 380,
-                    y: 340
+                    x: 155,
+                    y: 230
                 },
-                url: '@waterfront',
+                url: '@courthouse',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             },
-            'L Enfant Plaza': {
-                name: 'L Enfant Plaza',
-                id: 'lenfant-plaza-station',
+            'Minnesota Ave': {
+                name: 'Minnesota Ave',
+                id: 'minnesota-ave-station',
                 position: {
-                    x: 360,
-                    y: 280
-                },
-                url: '@lenfant',
-                fillColor: 'white',
-                mission: 'major transfer hub serving five out of the system\'s six lines, the most lines out of any station in the system; only the Red Line does not serve the station.'
-            },
-            'Archives': {
-                name: 'Archives',
-                id: 'archives-station',
-                position: {
-                    x: 360,
-                    y: 250
-                },
-                url: '@archives',
-                fillColor: 'white',
-                mission: 'a Washington Metro station in Washington, D.C. on the Green and Yellow Lines.'
-            },
-            'Gallery Place': {
-                name: 'Gallery Place',
-                id: 'gallery-place-station',
-                position: {
-                    x: 360,
-                    y: 220
-                },
-                url: '@galleryplace',
-                fillColor: 'white',
-                mission: 'a transfer station between the Red Line on the upper level and the Green/Yellow Lines on the lower level.'
-            },
-            'Mt Vernon Sq/7th St-Convention Center': {
-                name: 'Mt Vernon Sq/7th St-Convention Center',
-                id: 'mt-vernon-station',
-                position: {
-                    x: 360,
+                    x: 545,
                     y: 190
                 },
-                url: '@mtvernon',
+                url: '@minnesotaave',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in Washington, D.C., on the Green and Yellow Lines. '
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             },
-            'Shaw-Howard U': {
-                name: 'Shaw-Howard U',
-                id: 'shaw-howardu-station',
+            'Deanwood': {
+                name: 'Deanwood',
+                id: 'deanwood-station',
                 position: {
-                    x: 360,
+                    x: 565,
                     y: 160
                 },
-                url: '@howard',
+                url: '@deanwood',
                 fillColor: 'white',
-                mission: 'welcome to the Shaw neighborhood of Washington, home to Howard University.'
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             },
-            'U Street': {
-                name: 'U Street',
-                id: 'u-street-station',
+            'Cheverly': {
+                name: 'Cheverly',
+                id: 'cheverly-station',
                 position: {
-                    x: 340,
-                    y: 140
+                    x: 585,
+                    y: 130
                 },
-                url: '@ustreet',
+                url: '@cheverly',
                 fillColor: 'white',
-                mission: ' a rapid transit station on the Green and Yellow Lines of the Washington Metro in Washington, D.C.'
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             },
-            'Columbia Heights': {
-                name: 'Columbia Heights',
-                id: 'columbia-heights-station',
+            'Landover': {
+                name: 'Landover',
+                id: 'landover-station',
                 position: {
-                    x: 310,
-                    y: 120
-                },
-                url: '@columbiaheights',
-                fillColor: 'white',
-                mission: 'one of the busiest Metro stops outside the downtown core, with over four million exits in 2010.'
-            },
-            'Georgia Ave-Pentworth': {
-                name: 'Georgia Ave-Pentworth',
-                id: 'georgia-ave-pentworth-station',
-                position: {
-                    x: 340,
+                    x: 605,
                     y: 100
                 },
-                url: '@georgiaave',
+                url: '@landover',
                 fillColor: 'white',
-                mission: 'located at the border of the neighborhoods of Petworth, Sixteenth Street Heights, and Park View in Northwest.'
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             },
-            'Fort Totten': {
-                name: 'Fort Totten',
-                id: 'fort-totten-station',
+            'New Carrolton': {
+                name: 'New Carrolton',
+                id: 'new-carrolton-station',
                 position: {
-                    x: 370,
-                    y: 90
-                },
-                url: '@forttotten',
-                fillColor: 'white',
-                mission: 'last station on the Green Line in the District of Columbia before heading into Maryland that acts as a transfer point between the Green/Yellow and Red Lines'
-            },
-            'West Hyattsville': {
-                name: 'West Hyattsville',
-                id: 'west-hyattsville-station',
-                position: {
-                    x: 410,
+                    x: 625,
                     y: 70
                 },
-                url: '@hyattsville',
+                url: '@newcarrolton',
                 fillColor: 'white',
-                mission: 'a Washington Metro station in Hyattsville, Maryland on the Green Line. It is the first station in Maryland going northeast on the Green Line.'
-            },
-            'Prince Georges Plaza': {
-                name: 'Prince Georges Plaza',
-                id: 'pg-plaza-station',
-                position: {
-                    x: 440,
-                    y: 50
-                },
-                url: '@pgplaza',
-                fillColor: 'white',
-                mission: 'Prince Georges Plaza is a Washington Metro station in Hyattsville, Maryland, on the Green Line.'
-            },
-            'College Park-U of Md': {
-                name: 'College Park-U of Md',
-                id: 'college-park-station',
-                position: {
-                    x: 470,
-                    y: 30
-                },
-                url: '@cp',
-                fillColor: 'green',
-                mission: 'home of the terrapins'
-            },
-            'Greenbelt': {
-                name: 'Greenbelt',
-                id: 'greenbelt-station',
-                position: {
-                    x: 500,
-                    y: 15
-                },
-                url: '@greenbelt',
-                fillColor: 'white',
-                mission: 'Greenbelt is a Washington Metro and MARC station in Prince George\'s County, Maryland on the Green Line. It is the northeastern end of the Green Line.'
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
             }
         };
+        
+        var silverLineStations = {	
+            'Wiehle-Reston East': {
+                name: 'Wiehle-Reston East',
+                id: 'wiehle-reston-east-station',
+                position: {
+                    x: 25,
+                    y: 130
+                },
+                url: '@wiehle-reston-east',
+                fillColor: 'white',
+                mission: ' station in Suitland, Maryland, United States.'
+            },
+            'Spring Hill': {
+                name: 'Spring Hill',
+                id: 'spring-hill-station',
+                position: {
+                    x: 40,
+                    y: 150
+                },
+                url: '@springhill',
+                fillColor: 'white',
+                mission: ' station in Suitland, Maryland, United States.'
+            },
+            'Greensboro': {
+                name: 'Greensboro',
+                id: 'greensboro-station',
+                position: {
+                    x: 55,
+                    y: 170
+                },
+                url: '@greensboro',
+                fillColor: 'white',
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
+            },
+            'Tysons Corner': {
+                name: 'Tysons Corner',
+                id: 'tysons-corner-station',
+                position: {
+                    x: 70,
+                    y: 190
+                },
+                url: '@tysonscorner',
+                fillColor: 'white',
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
+            },
+            'McLean': {
+                name: 'McLean',
+                id: 'mclean-station',
+                position: {
+                    x: 85,
+                    y: 210
+                },
+                url: '@mclean',
+                fillColor: 'white',
+                mission: ' station in the Congress Heights neighborhood of Washington, D.C.'
+            }
+        };
+        
+        var redLineStations = {        	     
+            'Shady Grove': {
+                name: 'Shady Grove',
+                id: 'shady-grove-station',
+                position: {
+                    x: 50,
+                    y: 20
+                },
+                url: '@shadygrove',
+                fillColor: 'white',
+                mission: ' station in Suitland, Maryland, United States.'
+            },
+            'Rockville': {
+                name: 'Rockville',
+                id: 'rockville-station',
+                position: {
+                    x: 65,
+                    y: 35
+                },
+                url: '@rockville',
+                fillColor: 'white',
+                mission: ' station in Suitland, Maryland, United States.'
+            },	
+            'Twinbrook': {
+                name: 'Twinbrook',
+                id: 'twinbrook-station',
+                position: {
+                    x: 80,
+                    y: 50
+                },
+                url: '@twinbrook',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'White Flint': {
+                name: 'White Flint',
+                id: 'white-flint-station',
+                position: {
+                    x: 95,
+                    y: 65
+                },
+                url: '@whiteflint',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Grosvenor-Strathmore': {
+                name: 'Grosvenor-Strathmore',
+                id: 'grosvenor-strathmore-station',
+                position: {
+                    x: 110,
+                    y: 80
+                },
+                url: '@grosvenor-strathmore',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Medical Center': {
+                name: 'Medical Center',
+                id: 'medical-center-station',
+                position: {
+                    x: 125,
+                    y: 95
+                },
+                url: '@medicalcenter',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Bethesda': {
+                name: 'Bethesda',
+                id: 'bethesda-station',
+                position: {
+                    x: 150,
+                    y: 105
+                },
+                url: '@bethesda',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Friendship Heights': {
+                name: 'Friendship Heights',
+                id: 'friendship-heights-station',
+                position: {
+                    x: 170,
+                    y: 105
+                },
+                url: '@friendshipheights',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },         
+            'Tenleytown  AU': {
+                name: 'Tenleytown  AU',
+                id: 'tenleytown-au-station',
+                position: {
+                    x: 195,
+                    y: 105
+                },
+                url: '@tenleytownau',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Van Ness-UDC': {
+                name: 'Van Ness-UDC',
+                id: 'van-ness-udc-station',
+                position: {
+                    x: 215,
+                    y: 105
+                },
+                url: '@udc',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Cleveland Park': {
+                name: 'Cleveland Park',
+                id: 'cleveland-park-station',
+                position: {
+                    x: 235,
+                    y: 105
+                },
+                url: '@clevelandpark',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Woodley Park': {
+                name: 'Woodley Park',
+                id: 'woodley-park-station',
+                position: {
+                    x: 250,
+                    y: 120
+                },
+                url: '@woodleypark',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'DuPont Circle': {
+                name: 'DuPont Circle',
+                id: 'dupont-circle-station',
+                position: {
+                    x: 265,
+                    y: 135
+                },
+                url: '@dupontcircle',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Farragut North': {
+                name: 'Farragut North',
+                id: 'farragut-north-station',
+                position: {
+                    x: 280,
+                    y: 150
+                },
+                url: '@farragutnorth',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Takoma': {
+                name: 'Takoma',
+                id: 'takoma-station',
+                position: {
+                    x: 325,
+                    y: 85
+                },
+                url: '@takoma',
+                fillColor: 'white',
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+            },
+            'Judiciary Sq': {
+                name: 'Judiciary Sq',
+                id: 'judiciary-sq-station',
+                position: {
+                    x: 395,
+                    y: 220
+                },
+                url: '@judiciarysq',
+                fillColor: 'white',
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+            },
+            'Union Station': {
+                name: 'Union Station',
+                id: 'union-station-station',
+                position: {
+                    x: 425,
+                    y: 205
+                },
+                url: '@unionstation',
+                fillColor: 'white',
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+            },
+            'NoMa-Gallaudet U': {
+                name: 'NoMa-Gallaudet U',
+                id: 'noma-gallaudetu-station',
+                position: {
+                    x: 425,
+                    y: 185
+                },
+                url: '@noma',
+                fillColor: 'white',
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+            },
+            'Rhode Island Ave': {
+                name: 'Rhode Island Ave',
+                id: 'rhode-island-ave-station',
+                position: {
+                    x: 425,
+                    y: 165
+                },
+                url: '@rhodeislandave',
+                fillColor: 'white',
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+            },
+            'Brookland-CUA': {
+                name: 'Brookland-CUA',
+                id: 'brookland-cua-station',
+                position: {
+                    x: 425,
+                    y: 145
+                },
+                url: '@brooklancua',
+                fillColor: 'white',
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+            },
+            'Takoma': {
+                name: 'Takoma',
+                id: 'takoma-station',
+                position: {
+                    x: 340,
+                    y: 80
+                },
+                url: '@takoma',
+                fillColor: 'white',
+                mission: 'located in the Navy Yard/Near Southeast neighborhood of Southeast, with entrances on M Street at Half Street and New Jersey Avenue.'
+            },
+            'Silver Spring': {
+                name: 'Silver Spring',
+                id: 'silver-spring-station',
+                position: {
+                    x: 325,
+                    y: 70
+                },
+                url: '@silverspring',
+                fillColor: 'white',
+                mission: ' station in the Southwest Waterfront neighborhood of Washington, D.C., United States.'
+            },
+            'Forest Glen': {
+                name: 'Forest Glen',
+                id: 'forest-glen-station',
+                position: {
+                    x: 325,
+                    y: 50
+                },
+                url: '@forestglen',
+                fillColor: 'white',
+                mission: ' station in the Congress Heights neighborhood of Washington, D.C.'
+            },
+            'Wheaton': {
+                name: 'Wheaton',
+                id: 'wheaton-station',
+                position: {
+                    x: 325,
+                    y: 30
+                },
+                url: '@wheaton',
+                fillColor: 'white',
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
+            },
+            'Glenmont': {
+                name: 'Glenmont',
+                id: 'glenmont-station',
+                position: {
+                    x: 325,
+                    y: 10
+                },
+                url: '@glenmont',
+                fillColor: 'white',
+                mission: ' station in Hillcrest Heights, Maryland, United States.'
+            }
+        };
+        
+        
         
         function addStation(line, target, delay){
             var station = line[target];
@@ -923,7 +1199,7 @@
             newElement.setAttribute("class","station-marker");
             newElement.setAttribute("cx",`${station.position.x}`);
             newElement.setAttribute("cy",`${station.position.y}`);
-            newElement.setAttribute("r","10");
+            newElement.setAttribute("r","7");
             svg.appendChild(newElement);
             
             setTimeout(function(){
@@ -945,27 +1221,47 @@
                 for(var i=0; i<yellowKeys.length; i++){
                     addStation(yellowLineStations, yellowKeys[i], i);
                 }
+                
                 var greenKeys = Object.keys(greenLineStations);
                 for(var j=0; j<greenKeys.length; j++){
                     addStation(greenLineStations, greenKeys[j], j);
                 }
+                
                 var blueKeys = Object.keys(blueLineStations);
                 for(var k=0; k<blueKeys.length; k++){
                     addStation(blueLineStations, blueKeys[k], k);
                 }
                 
+                var orangeKeys = Object.keys(orangeLineStations);
+                for(var l=0; l<orangeKeys.length; l++){
+                    addStation(orangeLineStations, orangeKeys[l], l);
+                }
+                
+                var redKeys = Object.keys(redLineStations);
+                for(var m=0; m<redKeys.length; m++){
+                    addStation(redLineStations, redKeys[m], m);
+                }
+                
+                var silverKeys = Object.keys(silverLineStations);
+                for(var n=0; n<silverKeys.length; n++){
+                    addStation(silverLineStations, silverKeys[n], n);
+                }
                 
                 $('.station-marker').click(function(){
-                    var firstStations = extend(greenLineStations, yellowLineStations);
-                    var allStations = extend(firstStations, blueLineStations);
-                    var name = $(this).attr('name');
-                    this.style.fill = 'green'; 
-                    document.getElementById(`${allStations[stationInFocus].id}`).style.fill = 'white';
-                    console.log(`previous station: ${stationInFocus}`);
-                    stationInFocus = name;
-                    console.log(allStations[stationInFocus].id);
+                    var ygStations = extend(yellowLineStations, greenLineStations);
+                    var ygbStations = extend(ygStations, blueLineStations);
+                    var rygbStations = extend(redLineStations, ygbStations);
+                    var roygbStations = extend(rygbStations, orangeLineStations);
+                    var allStations = extend(roygbStations, silverLineStations);
                     
-                    $('#mission-container').text(allStations[name].mission);
+                    var name = $(this).attr('name');
+                    this.style.fill = 'violet'; 
+                    document.getElementById(`${allStations[stationInFocus].id}`).style.fill = 'white';
+                    //console.log(`previous station: ${stationInFocus}`);
+                    stationInFocus = name;
+                    //console.log(allStations[stationInFocus].id);
+                    
+                    $('#mission-container').empty().append(allStations[name].mission);
                     $('#pARk-address').text(allStations[name].url);
 
                     if(name=='Mt Vernon Sq/7th St-Convention Center'){
@@ -977,26 +1273,23 @@
             }, 2000);
             
             $('#explore-button').click(function(){
-                $('#station-title').text('how to use')
-                $('#mission-container').empty().append(`<div class='instruction'><span style='font-weight: bold; font-style: italic;'>(1)</span> select a pARk  to browse below</div><div class='instruction'><span style='font-weight: bold; font-style: italic;'>(2)</span> click on a node to visit the site</div><div class='instruction'><span style='font-weight: bold; font-style: italic;'>(3)</span> view the content in 2D or MAVRIC formats</div>`);
+                $('#station-title').text('how to browse')
+                $('#mission-container').empty().append(`<div class='instruction'><span style='font-weight: bold; font-style: italic;'>(1)</span> click on a node to visit the site</div><div class='instruction'><span style='font-weight: bold; font-style: italic;'>(2)</span> view the content in 2D or MAVRIC formats</div>`);
                 $('#explore-button').animate({
                     opacity: 0,
                 }, 500, function(){
                     $(this).hide();
-                    $('#details-footer-container').show().animate({
-                        opacity: 1.0
-                    }, 500);
                 });
                 $('#dmv-metro-pARk').animate({
                     opacity: 1.0
                 }, 1000);
                 
                 $('#station-details-container').animate({
-                    width: '250px',
-                    height: '250px',
+                    width: '200px',
+                    height: '165px',
                     margin: 0,
-                    left: '5%',
-                    top: '5%'
+                    left: '2%',
+                    bottom: '5%'
                 }, 1000, function(){
                     $(this).css({
                         backgroundColor: 'rgba(255, 255, 255, 0.4)',
@@ -1009,7 +1302,11 @@
     </script>
 </head>
 <body>
+    <div id='app-header-container'>
+        public Augmented Reality kinectome
+    </div>
     <div id='main-app-container'>
+        
         <div id='station-details-container'>
             <div id='pARk-address'>@houseofvenus</div>
             <div id='station-title'>welcome</div>
@@ -1019,27 +1316,34 @@
                 <p>what people decide to share online is visible here; for the rest you will have to go there and see it yourself. safe travels!</p>
             </div>
             <div id='details-footer-container'>
-                <div id='roster-option'>view roster</div>
                 <div id='pARk-option'>visit pARk</div>
             </div>
             <input id='explore-button' value='explore' />
         </div>
-        <svg id='dmv-metro-pARk' class='pARk-container' width="640" height="480">
+        <svg id='dmv-metro-pARk' class='pARk-container' width="640" height="640">
             <path d="M580 450 l -25 -25 l -25 -25 l -30 5 l -30 -25 l -20 -20 l -40 -20 l -30 0 l -20 -60 l 0 -30 l 0 -30 l 0 -30 l 0 -30 l -20 -20 l -30 -20 l 30 -20 l 30 -10 l 40 -20 l 30 -20 l 30 -20 l 30 -15 z" stroke-width="10" stroke="green" fill="none" />
             <path d="M585 470 l -80 -448 z" stroke-width="20" stroke="white" fill="white" />
             
             <path d="M280 470 l 0 -25 l 0 -30 l 0 -25 l 0 -30 l -25 -10 l -25 -10 l 0 -25 l 40 -20 l 80 0 l 0 -140 l -20 -20 l -30 -20 l 30 -20 l 30 -10 l -30 10 l -30 20 l 30 20 l 20 20 l 0 140 z" stroke-width="10" stroke="yellow" fill="none" />
             <path d="M280 470 l 65 -168 z" stroke-width="20" stroke="white" fill="white" />
             
-            <path d="M630 220 l -25 0 l -25 0 l -25 0 l -25 0 l -25 0 l -25 15 l -20 15 l -30 30 l -30 0 l -40 0 l -40 -20 l 0 -30 l 0 -30 l -20 -30 l -50 0 l -30 0 l -60 30 l 30 70 l 40 55 l 0 20 l 25 10 l 15 10 l 0 30 l 0 25 l 0 30 l 0 25 z" stroke-width="10" stroke="blue" fill="none" />
-            <path d="M280 470 l 65 -168 z" stroke-width="20" stroke="white" fill="white" />
+            <path d="M630 220 l -25 0 l -25 0 l -25 0 l -25 0 l -25 0 l -25 15 l -20 15 l -30 30 l -30 0 l -40 0 l -40 -20 l 0 -30 l 0 -30 l -20 -30 l -50 0 l -30 0 l -60 30 l 30 70 l 40 55 l 0 20 l 25 10 l 15 10 l 0 30 l 0 25 l 0 30 l 0 25 l -100 10 l -20 40 l 20 -40 l 100 -10 l 0 -25 l 0 -30 l 0 -25 l 0 -30 l -15 -10 l -25 -10 l 0 -20 l -40 -55 l -30 -70 l 60 -30 l 30 0 l 50 0 l 20 30 l 0 30 l 0 30 l 40 20 l 40 0 l 30 0 l 30 -30 l 20 -15 l 25 -15 z" stroke-width="10" stroke="blue" fill="none" />
+            
+            <path d="M15 230 l 140 0 l 0 -30 l 60 -30 l 30 0 l 50 0 l 20 30 l 0 30 l 0 30 l 40 20 l 40 0 l 30 0 l 30 -30 l 20 -15 l 25 -15 l 40 -30 l 20 -30 l 20 -30 l 20 -30 l 20 -30 l -20 30 l -20 30 l -20 30 l -20 30 l -40 30 l -25 15 l -20 15 l -30 30 l -30 0 l -40 0 l -40 -20 l 0 -30 l 0 -30 l -20 -30 l -20 0 l -30 0 l -30 0 l -60 30 l 0 30 l -140 0 z" stroke-width="10" stroke="orange" fill="none" />
+            
+            <path d="M50 20 l 15 15 l 15 15 l 15 15 l 15 15 l 15 15 l 25 10 l 20 0 l 25 0 l 20 0 l 20 0 l 15 15 l 15 15 l 15 15 l 0 50 l 40 0 l 40 20 l 35 0 l 30 -15 l 0 -20 l 0 -20 l 0 -20 l -85 -65 l -15 -10 l 0 -20 l 0 -20 l 0 -20 z" stroke-width="10" stroke="red" fill="none" />
+            <path d="M60 18 l 275 -10 z" stroke-width="15" stroke="white" fill="white" />
+            
+            <path d="M25 130 l 15 20 l 15 20 l 15 20 l 15 20 l 15 20 l 60 0 l 0 -30 l 65 -30 l 30 0 l 50 0 l 20 30 l 0 30 l 0 30 l 40 20 l 70 0 l 20 -30 l 40 -20 l 10 0 l 125 0 l -125 0 l -10 0 l -40 20 l -20 30 l -70 0 l -40 -20 l 0 -30 l 0 -30 l -20 -30 l -50 0 l -30 0 l -65 30 l 0 30 l -60 0 l -15 -20 z" stroke-width="10" stroke="silver" fill="none" />
+            
+            <image xlink:href="../media/img/home-icon.png" x="440" y="0" height="25px" width="25px"/>
         </svg>
     </div>
     <select id='pARk-selector'>
-        <option value="dmv">dmv</option>
-        <option value="cp">paris</option>
-        <option value="opel">bangalore</option>
+        <option class='pARk-location' value="dmv">dmv</option>
+        <option class='pARk-location' value="cp">paris</option>
+        <option class='pARk-location' value="opel">bangalore</option>
     </select>
-    
+    <img style='position: absolute; bottom: 10%; left: 50%; margin-left: -25px; cursor: pointer;' src='../media/img/globe-icon.png' width='50px' height='50px'/>
 </body>
 </html>
