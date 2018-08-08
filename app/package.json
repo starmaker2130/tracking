@@ -1,6 +1,6 @@
 {
   "name": "houseofvenus-stARterKit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "body-parser": "1.14.2",
@@ -10,6 +10,6 @@
     "socket.io": "1.5.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node pARk.js"
   }
 }
