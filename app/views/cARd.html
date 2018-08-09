@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>cARd | creative Augmented Reality desktop</title>
+    <script src='../js/socket.io.js'></script>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body, html{
+            width: 100%;
+            height: 100%;
+            background-color: red;
+            color: black;
+            font-family: monospace;
+        }
+        
+        #main-app-container{
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px white solid;
+            width: 400px;
+            height: 600px;
+            margin: -300px 0 0 -200px;
+            top: 50%;
+            left: 50%;
+            position: absolute;
+        }
+        
+        #app-header-title{
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        
+        #app-header-acronym{
+            width: 100%;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        
+        #explanation-options-container{
+            padding: 35px;
+        }
+        
+        .section-text{
+            margin-bottom: 50px;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            var socket = io.connect(location.host);
+        });
+    </script>
+</head>
+<body>
+    <div id='main-app-container'>
+        <div id='app-header-title'>cARd</div>
+        <div id='app-header-acronym'>creative Augmented Reality desktop</div>
+        <div id='explanation-options-container'>
+            <div id='what-section-text' class='section-text'>
+                the creative Augmented Reality desktop is an all purpose internet desktop built in augmented reality. Its interface allows users to treat the digital and real worlds as one continuous space, surpassing traditional constraints on creative collaboration.
+            </div>
+            <div id='why-section-text' class='section-text'>
+                cARds are designed to help us interact with the web more naturally. AR connects data to relevant real world objects to avoid overwhelming users as crowded, ad-supported web pages do. Now our hands are free to build digital experiences with the same intuition we use to create real ones 
+            </div>
+            <div id='when-section-text' class='section-text'>
+                cARds cost $1 for students and $5 for the general public. Buy one here. Orders ship October 22. In the meantime, try one out here.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
