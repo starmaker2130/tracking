@@ -142,7 +142,7 @@ io.sockets.on('connection', function(socket){
     });
    
     socket.on('createScene', function(data){
-        var ori = data.orientation;
+        let ori = data.orientation;
         
         socket.emit('clearInitialVideoFeed', {status: 1});
         

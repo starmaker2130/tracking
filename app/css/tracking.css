@@ -415,7 +415,7 @@ body, html {
     transparent none;*/
 }
 
-#generate-experience-button, #register-experience-button{
+#start-tracking-button, #register-experience-button{
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -429,15 +429,11 @@ body, html {
     text-transform: uppercase;
 }
 
-#register-experience-button{
-    display: none;
-}
-
-#generate-experience-button:focus, #register-experience-button:focus{
+#start-tracking-button:focus{
     outline: none;
 }
 
-#generate-experience-button:hover, #register-experience-button:hover{
+#start-tracking-button:hover{
     cursor: pointer;
     background-color: white;
     color: black;
@@ -778,70 +774,6 @@ body, html {
     text-indent: 100%;
     white-space: nowrap;
     overflow: hidden;
-}
-
-#url-source-input, #model-scale-input{
-    display: block;
-    margin: 10px auto;
-    border-radius: 5px;
-    font-family: monospace;
-    color: white;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px white solid;
-}
-
-#model-scale-input{
-    width: 100px;
-    height: 25px;
-}
-
-#url-source-input{
-    width: 150px;
-    height: 25px;
-}
-
-#url-source-input:focus, #model-scale-input:focus{
-    outline: none;
-}
-
-.upload-model-source-button{
-    display: block;
-    width: 75px;
-    height: 25px;
-    border-radius: 5px;
-    margin: 2% auto;
-    text-align: center;
-    line-height: 25px;
-    vertical-align: middle;
-    font-family: monospace;
-    color: black;
-    background-color: white;
-    cursor: pointer;
-}
-
-.upload-model-source-button:focus{
-    outline: none;
-}
-
-#browse-model-options-container{
-    width: 100%;
-    height: 100px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-}
-
-.model-icon{
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin: 5px 12px;
-    background-color: white;
-    cursor: pointer;
-}
-
-.model-icon:hover{
-    background-color: yellow;
 }
 
 #eiffel-tower-model{

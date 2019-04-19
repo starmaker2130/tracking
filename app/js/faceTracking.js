@@ -82,6 +82,14 @@ var sessionManager = {
         addingModel: false,
         addModelFromSource: null,
         scale: null
+    },
+    entity: {
+        geometry: {
+            primitive: 'sphere',
+            radius: 0.5
+        },
+        position: '0 1 -5',
+        material: 'src: #floor-texture'
     }
 };
 
@@ -100,98 +108,16 @@ function init(socket){ // starts the webcam or phone camera capture
         videoSelect.onchange = getStream;
     }
         
-    document.getElementById('generate-experience-button').addEventListener('click', function(){
+    document.getElementById('start-tracking-button').addEventListener('click', function(){
         channel.emit('createScene', {orientation: 1});
         sessionManager.builder.orientation = 1;
-    });
-    
-    $('.model-icon').click(function(){
-        var currentModel = sessionManager.builder.addModelFromSource;
-        if(currentModel==null){
-            $(this).addClass('selected-model-icon');    
-        }
-        else{
-            var prev = $('.selected-model-icon').attr('id');
-            $(`#${prev}`).removeClass('selected-model-icon');
-            $(this).addClass('selected-model-icon');
-        }
-    });
-}
-
-function registerCustomUserExperience(name, socket){
-    var expName = name;
-    var channel = socket;
-    channel.emit('registerExperience', {userId: 1, name: expName});
-}
-
-function askForModelSource(source){
-    sessionManager.builder.addingModel = true;
-    
-    $('#specify-model-source-container').css({
-        display: 'block'
-    }).animate({
-        opacity: 1.0
-    }, 500, function(){
-         console.log('revealing model source query');
-        
-        $('#url-source-option').click(function(){
-            $('#source-option-container').animate({
-                opacity: 0
-            }, 250, function(){
-                $(this).hide();
-                    $('#url-source-option-page').show().animate({
-                    opacity: 1.0
-                }, 250, function(){
-                    console.log('url source option page shown.');
-                });
-            });
-        });
-        
-        $('#browse-source-option').click(function(){
-            $('#source-option-container').animate({
-                opacity: 0
-            }, 250, function(){
-                $(this).hide();
-                $('#browse-source-option-page').show().animate({
-                    opacity: 1.0
-                }, 250, function(){
-                    console.log('browse source option page shown.');
-                });
-            });
-        });
-    });
-}
-
-function loadModelFromSource(source, type, scale){
-    switch(type){
-        case 0: //  url was provided as source
-            sessionManager.builder.addModelFromSource = source;
-            break;
-        case 1: //  model icon was clicked on for source
-            var lib = {
-                'eiffel-tower': '../../media/model/eiffel-tower.obj',   
-                'soccer-ball': '../../media/model/eiffel-tower.obj',
-                'car': '../../media/model/eiffel-tower.obj',
-            }
-            sessionManager.builder.addModelFromSource = lib[source];
-            break;
-        default:
-            break;
-    }
-    
-    sessionManager.builder.scale = scale;
-    
-    $('#specify-model-source-container').animate({
-        opacity: 0
-    }, 500, function(){
-        $(this).hide();
-        sessionManager.builder.addingModel = false;
-    })
+    });    
 }
 
 $(document).ready(function(){
     var socket = io.connect(location.host);
     init(socket);
+    
     socket.on('clearInitialVideoFeed', function(data){
         var video = document.getElementById('video');
         let stream = video.srcObject;
@@ -240,20 +166,6 @@ $(document).ready(function(){
         // set image data
         const ctx = canvas.getContext('2d');
         ctx.putImageData(imgData, 0, 0);/**/
-    });
-    
-    socket.on('cleanUpExperienceBuilderScene', function(data){
-        var numOfObjects = data.amountCreated;
-        console.log(`${numOfObjects} were created for this scene`);
-        
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        canvas.style.display = 'none';
-        document.getElementById('generate-experience-button').style.display = 'none';
-        //document.getElementById('register-experience-button').style.display = 'block';
     });
     
     socket.on('loadUserARExperience', function(data){
