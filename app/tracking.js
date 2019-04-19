@@ -485,7 +485,12 @@ function gestureTrackingTest(source, target, renderRate){
     const cv = require('opencv4nodejs');
     
     const skinColorUpper = hue => new cv.Vec(hue, 0.8 * 255, 0.6 * 255);
+    const skinColorLower = hue => new cv.Vec(hue, 0.3 * 255, 0.15 * 255);
+    
+    /*
+    const skinColorUpper = hue => new cv.Vec(hue, 0.8 * 255, 0.6 * 255);
     const skinColorLower = hue => new cv.Vec(hue, 0.1 * 255, 0.05 * 255);
+    */
     
     const devicePort = 0;
     
@@ -641,7 +646,7 @@ function gestureTrackingTest(source, target, renderRate){
             resizedImg.drawContours([handContour], pointColor, { thickness: 2 }); //previous version: blue
             
                         
-          //  if(verticesWithValidAngle[0].d1!='undefined'){
+          if(verticesWithValidAngle[0]!=undefined){
             try{
                 const xValue = verticesWithValidAngle[0].d1.x;
                 const vertext = verticesWithValidAngle[0].d1;
@@ -661,7 +666,7 @@ function gestureTrackingTest(source, target, renderRate){
                 console.log(err);
             }
                 
-          //  }
+           }
               // draw points and vertices
             verticesWithValidAngle.forEach(function(v){
         
@@ -787,14 +792,16 @@ function facialRecognitionTest(source, target, renderRate){
                     
                     return;
                 }
-
+                
+                let rectData = null;
                   // draw detection
                 const facesImg = resizeFrame.copy();
                 const numDetectionsTh = 10;
                 objects.forEach(function(rect, i){
                     const thickness = numDetections[i] < numDetectionsTh ? 1 : 2;
                     const drawRect = facesImg.drawRectangle(rect, cv.Vec(255, 0, 0), 2, cv.LINE_8);
-                    console.log(rect);
+                    rectData = rect;
+                    //console.log(rect);
                     //drawBlueRect(facesImg, rect, { thickness });
                 });
                 
@@ -811,7 +818,7 @@ function facialRecognitionTest(source, target, renderRate){
 
                    // console.log(bufArray);
 
-                    socket.emit('paintCanvas', {buf: bufArray, rows: facesImg.rows, cols: facesImg.cols, type: 'face'});   
+                    socket.emit('paintCanvas', {buf: bufArray, rows: facesImg.rows, cols: facesImg.cols, type: 'face', rectangle: rectData});   
                 }
                 else{
                     console.log('no specified output target for processing results');

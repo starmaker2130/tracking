@@ -84,6 +84,7 @@ var sessionManager = {
         scale: null
     },
     entity: {
+        id: 'default-mask',
         geometry: {
             primitive: 'sphere',
             radius: 0.5
@@ -153,7 +154,15 @@ $(document).ready(function(){
     
     socket.on('paintCanvas', function(data){
         var arr = new Uint8ClampedArray(data.buf); //buffer
-
+        let maskPos = data.rectangle;
+        console.log(maskPos.x);
+        
+        let moveToX = parseInt(maskPos.x)/300;
+        let moveToY = parseInt(maskPos.y)/250;
+        
+        sessionManager.entity.position = moveToX+' '+moveToY+' -5';
+        $(`#${sessionManager.entity.id}`).attr('position', sessionManager.entity.position);
+        
         const imgData = new ImageData(
           arr,
           data.cols,
@@ -168,21 +177,6 @@ $(document).ready(function(){
         ctx.putImageData(imgData, 0, 0);/**/
     });
     
-    socket.on('loadUserARExperience', function(data){
-        var markup = data.source;
-        
-        $('#final-experience-preview-container').append(markup);
-        
-        //$('#final-experience-preview-container').attr('src', '../media/room/temp');
-        
-        $('#final-experience-preview-container').css({
-            zIndex: 105,
-            display: 'block'
-        }).animate({
-            opacity: 1.0
-        });
-    });
-    
     socket.on('getCurrentObjectType', function(data){
         var objectType = $('#object-type-list-container option:selected').text();
         console.log(`just added a ${objectType} to the scene.`);
@@ -191,15 +185,6 @@ $(document).ready(function(){
             src: sessionManager.builder.addModelFromSource,
             scale: sessionManager.builder.scale
         });
-    });
-    
-    socket.on('completeRegistration', function(data){
-        var complete = data.success;
-        if(complete){
-            window.location.replace('./');
-        }else{
-            console.log('there was an error while trying to register the user experience.');
-        }
     });
                     
 });
