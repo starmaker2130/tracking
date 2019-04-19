@@ -9,7 +9,6 @@ var express = require('express');
 var formidable = require('formidable');
 var util = require('util');
 var fs = require('fs');
-var WhichBrowser = require('which-browser');
 // main application instance
 
 var app = express();
@@ -53,45 +52,136 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use(express.static('/'));
 
-var deviceType = 'unknown';
-
 app.get('/', function(req, res){
-    var result = new WhichBrowser(req.headers);
-    console.log(result.toString());
-    if(result.isType('desktop')){
-        console.log('This is a desktop computer.');
-        deviceType = 'desktop';
-    }
-    else{
-        console.log('This is a mobile device.');
-        deviceType = 'mobile';
-    }
-    
-    res.render('connect.html',{root: dir[0]});
+    res.render('index.html',{root: dir[0]});
 });
 
-app.get('/pARk', function(req, res){
-    res.render('dmv.html',{root: dir[0]});
+app.get('/rfid', function(req, res){
+    res.render('empty-rfid.html',{root: dir[0]});
 });
 
-app.get('/remote', function(req, res){
-    res.render('remote.html',{root: dir[0]});
+app.get('/pamo', function(req, res){
+    res.render('pamo.html',{root: dir[0]});
 });
 
 app.get('/postAR', function(req, res){
     res.render('postAR.html',{root: dir[0]});
 });
 
+app.get('/touch', function(req, res){
+    res.render('touch.html',{root: dir[0]});
+});
+
+app.get('/mind', function(req, res){
+    res.render('mindwave.html', {root: dir[0]});
+});
+
+app.get('/cv', function(req, res){
+    res.render('cv.html',{root: dir[0]});
+});
+
+app.get('/hands', function(req, res){
+    res.render('hands.html',{root: dir[0]});
+});
+
+app.get('/test', function(req, res){
+    res.render('test.html',{root: dir[0]});
+});
+
+app.get('/wiki', function(req, res){
+    res.render('wiki.html',{root: dir[0]});
+});
+
 app.get('/cARd', function(req, res){
     res.render('cARd.html',{root: dir[0]});
 });
 
-app.get('/css/remote.css', function(req, res){
-    res.sendFile('remote.css', {root: dir[1]});
+app.get('/menu', function(req, res){
+    res.render('menu.html',{root: dir[0]});
+});
+
+app.get('/gallery', function(req, res){
+    res.render('gallery.html',{root: dir[0]});
+});
+
+app.get('/ar', function(req, res){
+    res.render('ar.html',{root: dir[0]});
+});
+
+app.get('/vr', function(req, res){
+    res.render('vr.html',{root: dir[0]});
+});
+
+app.get('/rooms', function(req, res){
+    res.render('rooms.html',{root: dir[0]});
+});
+
+app.get('/newrooms', function(req, res){
+    res.render('newrooms.html',{root: dir[0]});
+});
+
+app.post('/upload', function(req, res){
+
+    // create an incoming form object
+    var form = new formidable.IncomingForm();
+
+      // specify that we want to allow the user to upload multiple files in a single request
+    form.multiples = true;
+
+
+    form.on('fileBegin', function (name, file){
+        file.path = __dirname + '/uploads/' + file.name;
+    });
+
+    form.on('file', function (name, file){
+        console.log('uploaded ' + file.name);
+       // console.log('TODO: initiate server side reaction');
+    });
+
+      // log any errors that occur
+    form.on('error', function(err) {
+        console.log('An error has occured: \n' + err);
+    });
+
+      // once all the files have been uploaded, send a response to the client
+    form.on('end', function() {
+        res.end('success');
+    });
+
+      // parse the incoming request containing the form data
+    form.parse(req);
+});
+
+app.get('/template', function(req, res){
+    res.render('template.html',{root: dir[0]});
+});
+
+app.get('/css/main.css', function(req, res){
+    res.sendFile('main.css', {root: dir[1]});
 });
 
 app.get('/css/rfid.css', function(req, res){
     res.sendFile('rfid.css', {root: dir[1]});
+});
+
+app.get('/css/menu.css', function(req, res){
+    res.sendFile('menu.css', {root: dir[1]});
+});
+
+app.get('/css/wiki.css', function(req, res){
+    res.sendFile('wiki.css', {root: dir[1]});
+});
+
+app.get('/css/rooms.css', function(req, res){
+    res.sendFile('rooms.css', {root: dir[1]});
+});
+
+app.get('/css/profile.css', function(req, res){
+    res.sendFile('profile.css', {root: dir[1]});
+});
+
+app.get('/css/form.css', function(req, res){
+    res.sendFile('form.css', {root: dir[1]});
 });
 
 app.get('/js/:script_id', function(req, res){
@@ -139,9 +229,9 @@ app.get('/drafts/docs/:doc_id', function(req, res){
     res.sendFile(doc_id, {root: dir[10]});
 });
 
-app.get('/media/card/:card_id', function(req, res){
-    var card_id = req.params.card_id;
-    res.sendFile(card_id+'.html', {root: dir[12]});
+app.get('/media/room/:room_id', function(req, res){
+    var room_id = req.params.room_id;
+    res.sendFile(room_id+'.html', {root: dir[12]});
 });
 
 app.get('/media/room/media/model/:room_model_id', function(req, res){
@@ -305,6 +395,13 @@ app.post('/generate', function(req, res){
     res.end('success');
 });
 
+var main_history = [];
+var template_history = [];
+var vr_history = [];
+var completedProfiles = {};
+
+var last = null;
+var pingCount = 0;
 
 /* syntax for user defined addresses
 *  viewed as hov.fun/your-experience-url
@@ -318,6 +415,15 @@ app.post('/generate', function(req, res){
 *
 */
 
+function wrapConnection(conn){
+    var result = {
+        socket: conn,
+        id: conn.id,
+        page: null, //0=home, 1=template
+        userData: null
+    };
+    return result;
+}
 
 var io = require('socket.io').listen(app.listen(config.PORT, function(){
     console.log(`[0] listening on port ${config.PORT}`);
@@ -331,32 +437,26 @@ orientation: 0 = landmark; 1 = face; 2 = hand
 
 
 */
-
-var guests = [
-    
-];
-
 io.sockets.on('connection', function(socket){
-    console.log('client connected.');
-    var conn = socket;
-    
-    socket.on('checkDeviceType', function(data){
-        socket.emit('loadDeviceType', {type: deviceType});
-    });
+    var identity = wrapConnection(socket);
+    console.log('client connected...');
     
     socket.on('identify', function(data){
-        console.log('configurind id...');
-        var remote = data;
-        var user  = {
-            manufacturer: remote.manufacturer,
-            author: remote.author,
-            source: remote.source,
-            socket: conn,
-            id: guests.length
-        };
-        guests.push(user);
-        console.log('remote registered.');
-        console.log(`connection ${user.socket.id} established b/w remote ${user.source.tapin} and ${user.source.product} ${user.source.device}`);
+        identity.page = data.page;
+        var section = identity.page;
+        
+        if(section==0){
+            main_history.push(identity);
+            console.log(`main page visitor # ${main_history.length}`);
+        }
+        else if(section==1){
+            template_history.push(identity);
+            console.log(`template platform visitor # ${template_history.length}`);
+        }
+        else if(section==2){
+            vr_history.push(identity);
+            console.log(`vr main page visitor # ${vr_history.length}`);
+        }
     });
     
     socket.on('startWebcamCapture', function(data){

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf=8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>post.AR v. 0.2.0</title>
+    <link rel='stylesheet' type='text/css' href='../css/postARapp/postar.css' />
+    <script src='../js/socket.io.js'></script>
+    <script src='../js/aframe.min.js'></script>
+    <script src='../js/jquery-3.2.1.min.js'></script>
+    <script src='../js/Eye.js'></script>
+    <script src='../js/postAR.js'></script>
+</head>
+<body>
+    <a-scene embedded id='final-experience-preview-container'>
+        <a-assets>
+            <img id='floor-texture' src='../media/texture/grid_pattern.png' />
+        </a-assets>
+    </a-scene>
+    <div id='camera-container'>
+        <input id='hov-home-button' type='button' value=''/>
+        <input id='generate-experience-button' value='done' type='button'/>
+        <input id='register-experience-button' value='save' type='button'/>
+        
+        <select id='videoSource'>
+        </select>
+        <select id='object-type-list-container'>
+            <option value="sphere" class='object-type-list-item'>sphere</option>
+            <option value="tetrahedron" class='object-type-list-item'>tetra</option>
+            <option value="cube" class='object-type-list-item'>cube</option>
+            <option value="model" class='object-type-list-item'>model</option>
+            <option value="text" class='object-type-list-item'>text</option>
+        </select>
+        <div id='rooms-title'>
+            post.AR v. 0.2.0
+        </div>
+        <div id='final-overlay'> <!-- z: 106 -->
+            <div id='internet-sharing-options-container'>
+                <input id='mavnet-option-button' class='internet-sharing-option' value='MAV' type='button'/>
+                <input id='www-option-button' class='internet-sharing-option' value='www' type='button'/>
+            </div>
+            <div id='experience-url-form-container'>
+                <span id='user-entry-intro'>Store your room at:</span> 
+                <div id='experience-url-form'>
+                    <span id='user-entry-label'>hov.fun/</span>
+                    <input id='user-url-entry' type='text' placeholder='your-room-name' />
+                </div>
+                <input type='button' value='go' id='submit-user-url' />
+            </div>
+        </div>
+        <div id='settings-overlay'>
+            <div id='add-item-menu' class='menu-container'>
+                <div id='add-item-menu-title' class='menu-title'>Add/Edit Object</div>
+                <input id='model-name' class='input-data-field' type='text' placeholder='object name' />
+                <input id='model-source' class='input-data-field' placeholder='source, e.g. "../media/models/model.obj"' />
+                <input id='model-rotation-value' class='input-data-field' placeholder='rotation value, e.g. "0 90 0"' />
+                <input id='model-scale-value' class='input-data-field' placeholder='scale value, e.g. "1 1 1"' />
+        
+                <div id='add-item-menu-options-container' class='options-container'>
+                    <input id='add-menu-child-element' class='item-menu-option' type='button' value='add' />
+                    <input id='remove-menu-child-element' class='item-menu-option' type='button' value='remove' />
+                    <input id='cancel-menu-edit' class='item-menu-option' type='button' value='cancel' />
+                </div>
+            </div>
+            <div id='manage-settings-menu' class='menu-container'>
+                <div id='manage-settings-menu-title' class='menu-title'>Manage Settings</div>
+                <div class='filler-text'>settings will be available soon</div>
+
+                <div id='manage-settings-menu-options-container' class='options-container'>
+                    <input id='save-settings-button' class='item-menu-option-large' type='button' value='save' />
+                    <input id='cancel-settings-update-button' class='item-menu-option-large' type='button' value='cancel' />
+                </div>
+            </div>
+            <div id='edit-code-menu' class='menu-container'>
+                <div id='edit-code-menu-title' class='menu-title'>Edit Code</div>
+                <select id='code-view-option' value='code view'>
+                    <option id='main-code-view' value='main'>main</option>
+                    <option id='pattern-code-view' value='pattern'>pattern</option>
+                </select>
+                <div class='filler-text'>settings will be available soon</div>
+
+                <div id='edit-code-menu-options-container' class='options-container'>
+                    <input id='save-code-button' class='item-menu-option-large' type='button' value='save' />
+                    <input id='cancel-code-edit-update-button' class='item-menu-option-large' type='button' value='cancel' />
+                </div>
+            </div>
+        </div>
+        <video id="video" autoplay></video>
+        <input type='button' id='gesture-watch-button' class='marker-capture-button' value=''/>
+        <input type='button' id='share-build-button' class='build-scene-button' value='...'/>
+        <div id='main-build-options-menu'><!-- z: 75-->
+            <input id='ar-item-menu' class='build-scene-button' value='+' type='button' />
+            <input id='setting-menu' class='build-scene-button' value='*' type='button'/>
+            <input id='code-menu' class='build-scene-button' value='</>' type='button'/>
+        </div>
+        <div id='canvas-container'><!-- z: -50 | 50 -->
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id='specify-model-source-container'>
+            <div id='source-option-container'>
+                <input type='button' id='url-source-option' class='source-option' value='url'/>
+                <input type='button' id='browse-source-option' class='source-option' value='browse' />
+            </div>
+            <div id='url-source-option-page' class='source-option-page'>
+                <input class='hide-source-option-page-button' type='button' value=''/>
+                <input type='text' id='url-source-input' placeholder='url-to-file-source' />
+                <input type='text' id='model-scale-input' placeholder='xx yy zz' />
+                <input id='upload-url-button' class='upload-model-source-button' type='button' value='upload'/>
+            </div>
+            <div id='browse-source-option-page' class='source-option-page'>
+                <input class='hide-source-option-page-button' type='button' value=''/>
+                <div id='browse-model-options-container'>
+                    <div id='eiffel-tower-model' class='model-icon'></div>
+                    <div id='soccer-ball-model' class='model-icon'></div>
+                    <div id='car-model' class='model-icon'></div>
+                </div>
+                <input id='upload-browse-button' class='upload-model-source-button' type='button' value='upload'/>
+            </div>
+            <div id='text-option-page' class='source-option-page'>
+                <input class='hide-source-option-page-button' type='button' value=''/>
+                <input type='text' id='url-source-input' placeholder='hello universe' />
+                <input id='upload-url-button' class='upload-model-source-button' type='button' value='upload'/>
+            </div>
+        </div>
+    </div>
+    <div id='experience-type-dashboard-container'>
+            <input type='button' id='landmark-oriented-experience-button' class='experience-type-button' value='[ L ]'/>
+            <input type='button' id='face-oriented-experience-button' class='experience-type-button' value=''/>
+            <input type='button' id='hand-oriented-experience-button' class='experience-type-button' value='[ H ]'/>
+        </div>
+</body>
+</html>

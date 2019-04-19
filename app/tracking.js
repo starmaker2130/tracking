@@ -67,31 +67,21 @@ app.get('/', function(req, res){
         deviceType = 'mobile';
     }
     
-    res.render('connect.html',{root: dir[0]});
+    res.render('tracking.html',{root: dir[0]});
 });
 
-app.get('/pARk', function(req, res){
-    res.render('dmv.html',{root: dir[0]});
+
+app.get('/hand', function(req, res){
+    res.render('handTracking.html',{root: dir[0]});
 });
 
-app.get('/remote', function(req, res){
-    res.render('remote.html',{root: dir[0]});
+app.get('/face', function(req, res){
+    res.render('faceTracking.html',{root: dir[0]});
 });
 
-app.get('/postAR', function(req, res){
-    res.render('postAR.html',{root: dir[0]});
-});
-
-app.get('/cARd', function(req, res){
-    res.render('cARd.html',{root: dir[0]});
-});
-
-app.get('/css/remote.css', function(req, res){
-    res.sendFile('remote.css', {root: dir[1]});
-});
-
-app.get('/css/rfid.css', function(req, res){
-    res.sendFile('rfid.css', {root: dir[1]});
+app.get('/css/:style_id', function(req, res){
+    var style_id = req.params.style_id;
+    res.sendFile(style_id, {root: dir[1]});
 });
 
 app.get('/js/:script_id', function(req, res){
@@ -109,214 +99,10 @@ app.get('/media/gifs/:gif_id', function(req, res){
     res.sendFile(gif_id, {root: dir[4]});
 });
 
-app.get('/media/pattern/:pattern_id', function(req, res){
-    var pattern_id = req.params.pattern_id;
-    res.sendFile(pattern_id+'.patt', {root: dir[5]});
-});
-
 app.get('/media/img/:img_id', function(req, res){
     var img_id = req.params.img_id;
     res.sendFile(img_id, {root: dir[6]});
 });
-
-app.get('/media/sounds/:sound_id', function(req, res){
-    var sound_id = req.params.sound_id;
-    res.sendFile(sound_id, {root: dir[7]});
-});
-
-app.get('/media/model/:model_id', function(req, res){
-    var model_id = req.params.model_id;
-    res.sendFile(model_id, {root: dir[8]});
-});
-
-app.get('/uploads/:upload_id', function(req, res){
-    var upload_id = req.params.upload_id;
-    res.sendFile(upload_id, {root: dir[9]});
-});
-
-app.get('/drafts/docs/:doc_id', function(req, res){
-    var doc_id = req.params.doc_id;
-    res.sendFile(doc_id, {root: dir[10]});
-});
-
-app.get('/media/card/:card_id', function(req, res){
-    var card_id = req.params.card_id;
-    res.sendFile(card_id+'.html', {root: dir[12]});
-});
-
-app.get('/media/room/media/model/:room_model_id', function(req, res){
-    var room_model_id = req.params.room_model_id;
-    res.sendFile(room_model_id, {root: dir[14]});
-});
-
-app.get('/media/img/bg/:img_id', function(req, res){
-    var img_id = req.params.img_id;
-    res.sendFile(img_id, {root: dir[13]});
-});
-
-app.get('/css/roomsapp/:style_id', function(req, res){
-    var style_id = req.params.style_id;
-    res.sendFile('roomsapp/'+style_id, {root: dir[1]});
-});
-
-app.get('/css/postARapp/:style_id', function(req, res){
-    var style_id = req.params.style_id;
-    res.sendFile('postARapp/'+style_id, {root: dir[1]});
-});
-
-app.post('/generate', function(req, res){
-    var src = req.body.src;
-    var patt = req.body.pattern;
-
-  //  console.log(src);
-    console.log('------------------------');
-    console.log(patt);
-    
-    // save pattern in local patt file
-    fs.writeFile(dir[5]+'/auto.patt', patt, function (err) {
-        if (err) {
-            return console.log('there is an error saving the pattern');
-        }
- 
-        console.log('the pattern file was saved');
-    });
-    
-    // build ar-template page markup
-    var markup = `<!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset='utf-8' />
-        <meta name='viewport' content='width=device-width,initial-scale=1.0' />
-        <title>AR Template | v 0.9.1</title>
-        <link rel='stylesheet' type='text/css' href='../../css/roomsapp/profile.css' />
-        <script src='../../js/jquery-3.2.1.min.js'></script>
-        <script src='../../js/aframe.min.js'></script>
-        <script src="https://rawgit.com/mayognaise/aframe-gif-shader/master/dist/aframe-gif-shader.min.js"></script>
-        <script src='../../js/ar.min.js'></script>
-        <script>
-            var sessionManager;
-
-            function requestFullScreen(element) { //    makes the application fullscreen on fullscreen equipped browsers
-                var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen; // Supports most browsers and their versions.
-
-                if (requestMethod) { // Native full screen.
-                    requestMethod.call(element);
-                } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-                    var wscript = new ActiveXObject("WScript.Shell");
-                    if (wscript !== null) {
-                        wscript.SendKeys("{F11}");
-                    }
-                }
-            }
-
-            function initializeSession(data){
-                sessionManager = {
-                    audio: {
-                        player: null,
-                        isPlaying: false,
-                        focus: null,
-                        state: 0 // 0 = inactive; 1 = playing; 2 = paused
-                    },
-                    application: {
-                        focus: 0, // 0 = home; 1 = audio; 2 = visual; 3 = search
-                        players: {
-                            available: [
-                                'audioAR',
-                                'visualAR'
-                            ],
-                            loaded: null
-                        }
-                    },
-                    visual: {
-                        player: null,
-                        isPlaying: false,
-                        focus: null,
-                        state: 0 // 0 = inactive; 1 = playing; 2 = paused
-                    },
-                };
-
-               // loadAREnvironment(0);
-                /**/
-
-                sessionManager.audio.focus = 0;
-            }
-
-            $(document).ready(function(){
-                initializeSession();
-
-                // FIRST STAGE
-                $('#launch-application-page').click(function(){
-
-                    console.log('application launch...');
-
-                    var elem = document.body;
-                    //requestFullScreen(elem);
-
-                    $(this).animate({
-                        height: 0
-                    }, 2500, function(){
-                        $(this).hide();
-                    });
-                });
-
-            });
-        </script>
-    </head>
-    <body>
-        <div id='launch-application-page' class='entry-layer overlay'>
-            <div id='instructions'>
-                tap anywhere
-                <div id='logo'></div>
-                to launch app
-            </div>
-        </div>
-        <div class='control-layer overlay'>
-        </div>
-        <!-- FOR PRODUCTION PURPOSES ONLY-->
-        <a-scene embedded arjs id='main-app-container' class='viewer-layer'>
-            <a-assets>
-                <img id='floor-texture' src='../../media/texture/grid_pattern.png' preload='true' />
-            </a-assets>
-
-            <!--<a-marker preset='hiro'>-->
-            <a-marker preset='custom' type='pattern' url='../../media/pattern/auto'>
-                <a-entity id='floor'
-                          geometry='primitive: plane; width: 1; height: 1;'
-                          material='src: #floor-texture; repeat: 1 1;'
-                          text='value: origin; width: 4; color: white; align: center;'
-                          position='0 0 0'
-                          rotation='-90 0 0'>
-                </a-entity>
-            </a-marker>
-
-            <a-camera-static />
-        </a-scene>
-    </body>
-    </html>`
-    
-    // save markup into actual file
-    fs.writeFile(dir[12]+'/auto.html', markup, function (err) {
-        if (err) {
-            return console.log('there is an error building the markup');
-        }
- 
-        console.log('the markup file was saved');
-    });
-    res.end('success');
-});
-
-
-/* syntax for user defined addresses
-*  viewed as hov.fun/your-experience-url
-*
-*  'your-experience-url' : {
-        timestamp: Date(), //currentTime
-        id: socket.id, 
-        user: socket
-    }
-*
-*
-*/
 
 
 var io = require('socket.io').listen(app.listen(config.PORT, function(){
@@ -340,25 +126,6 @@ io.sockets.on('connection', function(socket){
     console.log('client connected.');
     var conn = socket;
     
-    socket.on('checkDeviceType', function(data){
-        socket.emit('loadDeviceType', {type: deviceType});
-    });
-    
-    socket.on('identify', function(data){
-        console.log('configurind id...');
-        var remote = data;
-        var user  = {
-            manufacturer: remote.manufacturer,
-            author: remote.author,
-            source: remote.source,
-            socket: conn,
-            id: guests.length
-        };
-        guests.push(user);
-        console.log('remote registered.');
-        console.log(`connection ${user.socket.id} established b/w remote ${user.source.tapin} and ${user.source.product} ${user.source.device}`);
-    });
-    
     socket.on('startWebcamCapture', function(data){
         var settings = data;
         var target = data.target;// 0 = default = backend only; 1 = front-end only
@@ -373,41 +140,7 @@ io.sockets.on('connection', function(socket){
             console.log('test value not recognized.')
         }
     });
-    
-    socket.on('startMindwave', function(data){
-        var Mindwave = require('mindwave');
-        var mw = new Mindwave();
-
-        mw.on('eeg', function(eeg){
-            console.log('eeg', eeg);
-        });
-
-       /* mw.on('signal', function(signal){
-            console.log('signal', signal);
-        });
-
-        mw.on('attention', function(attention){
-            console.log('attention', attention);
-        });
-
-        mw.on('meditation', function(meditation){
-            console.log('meditation', meditation);
-        });
-
-        mw.on('blink', function(blink){
-            console.log('blink', blink);
-        });*/
-
-        // These are the raw EEG data
-        // They come in at about 512Hz
-        // mw.on('wave', function(wave){
-        // 	console.log('wave', wave);
-        // });
-///dev/cu.MindWaveMobile-DevA
-        mw.connect('/dev/tty.MindWaveMobile-DevA');
-        socket.emit('mindwaveStarted', {success: true});
-    });
-
+   
     socket.on('createScene', function(data){
         var ori = data.orientation;
         
@@ -1061,6 +794,7 @@ function facialRecognitionTest(source, target, renderRate){
                 objects.forEach(function(rect, i){
                     const thickness = numDetections[i] < numDetectionsTh ? 1 : 2;
                     const drawRect = facesImg.drawRectangle(rect, cv.Vec(255, 0, 0), 2, cv.LINE_8);
+                    console.log(rect);
                     //drawBlueRect(facesImg, rect, { thickness });
                 });
                 
