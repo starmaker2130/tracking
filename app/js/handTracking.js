@@ -82,6 +82,15 @@ var sessionManager = {
         addingModel: false,
         addModelFromSource: null,
         scale: null
+    },
+    entity: {
+        id: 'default-mask',
+        geometry: {
+            primitive: 'sphere',
+            radius: 0.5
+        },
+        position: '0 1 -5',
+        material: 'src: #floor-texture'
     }
 };
 
@@ -140,6 +149,21 @@ $(document).ready(function(){
                 console.log(value);
             })
         });
+    });
+    
+    socket.on('selectionMadeForDeliveryItem', function(data){
+        let selection = data.selection;
+        //let selectedPos = document.querySelector(selection).object3D.position;
+        
+        if(selection=='#menu-option-0'){
+            document.querySelector('#selected-option').object3D.position.set(-2, 2.2, -4);
+        }
+        else if(selection=='#menu-option-1'){
+            document.querySelector('#selected-option').object3D.position.set(2, 2.2, -4);
+        }
+        document.querySelector(selection).object3D.visible = false;
+        //document.querySelector('#selected-option').object3D.position.set(selectedPos);
+        document.querySelector('#selected-option').object3D.visible = true;
     });
     
     socket.on('paintCanvas', function(data){

@@ -36,6 +36,9 @@ var config = {
         './media/room/media/model'
     ]
 };
+var SELECTION_MADE = false;
+var PRESSING_ON_LEFT_SELECTION = 0;
+var PRESSING_ON_RIGHT_SELECTION = 0;
 
 var dir = config.DIRECTORY;
 
@@ -640,7 +643,7 @@ function gestureTrackingTest(source, target, renderRate){
 
     
             const result = resizedImg.copy();
-            const ballScene = resizedImg.copy();
+            //const ballScene = resizedImg.copy();
               // draw bounding box and center line
 
             resizedImg.drawContours([handContour], pointColor, { thickness: 2 }); //previous version: blue
@@ -650,8 +653,32 @@ function gestureTrackingTest(source, target, renderRate){
             try{
                 const xValue = verticesWithValidAngle[0].d1.x;
                 const vertext = verticesWithValidAngle[0].d1;
-                //console.log(xValue);   
-                ballScene.drawCircle(vertext, 20, pointColor, -5);       // previous version: 50, blueblue
+                if(xValue<200&&xValue>150){
+                    console.log('selecting the left item: ', SELECTION_MADE);
+                    if(!SELECTION_MADE){
+                        PRESSING_ON_LEFT_SELECTION++;
+                    }
+                    if(PRESSING_ON_LEFT_SELECTION>5&&SELECTION_MADE==false){
+                        SELECTION_MADE = true;
+                        console.log('SELECTION MADE FOR DELIVERY!!!!!!!!!! LEFT');
+                        socket.emit('selectionMadeForDeliveryItem', {selection: '#menu-option-0'});
+                    }
+                }
+                else if(xValue<550&&xValue>520){
+                    console.log('selecting the right item: ', SELECTION_MADE);
+                    if(!SELECTION_MADE){
+                        PRESSING_ON_RIGHT_SELECTION++;
+                    }
+                    if(PRESSING_ON_RIGHT_SELECTION>5&&SELECTION_MADE==false){
+                        SELECTION_MADE = true;
+                        console.log('SELECTION MADE FOR DELIVERY!!!!!!!!!! RIGHT');
+                        socket.emit('selectionMadeForDeliveryItem', {selection: '#menu-option-1'});
+                    }
+                }
+                else{
+                    console.log(xValue);  
+                }
+                //ballScene.drawCircle(vertext, 20, pointColor, -5);       // previous version: 50, blueblue
                 
                 if(objectsInSceneHandler.saveLastVertex){
                     objectsInSceneHandler.points.push(vertext);
@@ -688,7 +715,7 @@ function gestureTrackingTest(source, target, renderRate){
             
             for(var i=0; i<objectsInSceneHandler.points.length; i++){
                 resizedImg.drawCircle(objectsInSceneHandler.points[i], 25, green, -5);
-                ballScene.drawCircle(objectsInSceneHandler.points[i], 25, red, -5);
+                //ballScene.drawCircle(objectsInSceneHandler.points[i], 25, red, -5);
             }
               // display detection result  
             const numFingersUp = verticesWithValidAngle.length-2;
@@ -714,7 +741,7 @@ function gestureTrackingTest(source, target, renderRate){
             
             if(objectTarget==0){
                 const sideBySide = new cv.Mat(rows, cols * 2, cv.CV_8UC3);
-                ballScene.copyTo(sideBySide.getRegion(new cv.Rect(0, 0, cols, rows)));//result
+                //ballScene.copyTo(sideBySide.getRegion(new cv.Rect(0, 0, cols, rows)));//result
                 resizedImg.copyTo(sideBySide.getRegion(new cv.Rect(cols, 0, cols, rows)));
 
 
@@ -724,7 +751,7 @@ function gestureTrackingTest(source, target, renderRate){
                 cv.waitKey(9); 
             }
             else if(objectTarget==1){
-                if(objectsInSceneHandler.adding){
+                /*if(objectsInSceneHandler.adding){
                     const matRGBA = ballScene.channels === 1
                       ? ballScene.cvtColor(cv.COLOR_GRAY2RGBA)
                       : ballScene.cvtColor(cv.COLOR_BGR2RGBA);
@@ -733,18 +760,15 @@ function gestureTrackingTest(source, target, renderRate){
 
                     socket.emit('paintCanvas', {buf: bufArray, rows: ballScene.rows, cols: ballScene.cols, type: 'hand'});  
                 }
-                else{
+                else{*/
                     /* Hand mesh*/
-                    const matRGBA = resizedImg.channels === 1
+                const matRGBA = resizedImg.channels === 1
                       ? resizedImg.cvtColor(cv.COLOR_GRAY2RGBA)
                       : resizedImg.cvtColor(cv.COLOR_BGR2RGBA);
-
-                    var bufArray = matRGBA.getData();
-
-                   // console.log(bufArray);
-
-                    socket.emit('paintCanvas', {buf: bufArray, rows: resizedImg.rows, cols: resizedImg.cols, type: 'hand'});/**/    
-                }                
+                var bufArray = matRGBA.getData();
+                // console.log(bufArray);
+                socket.emit('paintCanvas', {buf: bufArray, rows: resizedImg.rows, cols: resizedImg.cols, type: 'hand'});/**/    
+                //}                
             }
         });    
     }, delayInterval);    
