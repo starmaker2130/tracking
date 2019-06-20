@@ -70,7 +70,7 @@ app.get('/', function(req, res){
         deviceType = 'mobile';
     }
     
-    res.render('tracking.html',{root: dir[0]});
+    res.render('index.html',{root: dir[0]});
 });
 
 

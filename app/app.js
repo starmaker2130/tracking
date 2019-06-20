@@ -67,11 +67,7 @@ app.get('/', function(req, res){
         deviceType = 'mobile';
     }
     
-    res.render('connect.html',{root: dir[0]});
-});
-
-app.get('/pARk', function(req, res){
-    res.render('dmv.html',{root: dir[0]});
+    res.render('index.html',{root: dir[0]});
 });
 
 app.get('/remote', function(req, res){
@@ -86,12 +82,9 @@ app.get('/cARd', function(req, res){
     res.render('cARd.html',{root: dir[0]});
 });
 
-app.get('/css/remote.css', function(req, res){
-    res.sendFile('remote.css', {root: dir[1]});
-});
-
-app.get('/css/rfid.css', function(req, res){
-    res.sendFile('rfid.css', {root: dir[1]});
+app.get('/css/:stylesheet_id', function(req, res){
+    let stylesheet_id = req.params.stylesheet_id;
+    res.sendFile(stylesheet_id, {root: dir[1]});
 });
 
 app.get('/js/:script_id', function(req, res){
